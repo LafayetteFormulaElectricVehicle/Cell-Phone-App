@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Graf Test</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_bar">Bar Chart</string>
+    <string name="button_line">Line Chart</string>
+</resources>
