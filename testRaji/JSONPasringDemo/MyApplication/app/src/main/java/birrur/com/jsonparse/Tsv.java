@@ -1,7 +1,7 @@
 package birrur.com.jsonparse;
 
 /**
- * Created by birru on 2/20/2017.
+ * Created by birru on 2/18/2017.
  */
 
 import com.google.gson.annotations.Expose;
