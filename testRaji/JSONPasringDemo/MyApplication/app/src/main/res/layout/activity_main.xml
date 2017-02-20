@@ -10,8 +10,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="birrur.com.jsonparse.MainActivity">
 
-    <TextView
+    <Button
+        android:text="Notify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/button_notify"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="notificate"/>
+
+    <Button
+        android:text="Parse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_parse"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/button_notify"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="parsiate"/>
 </RelativeLayout>

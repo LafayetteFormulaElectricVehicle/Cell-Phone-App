@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_parsify"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="birrur.com.jsonparse.Parsify">
+
+    <TextView
+        android:text="DashBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/tvDash"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="18sp" />
+
+    <TextView
+        android:text="Speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvSpeed"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/tvDash"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="RPM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvRPM"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/tvSpeed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvRPME"
+        android:layout_alignBaseline="@+id/tvRPM"
+        android:layout_alignBottom="@+id/tvRPM"
+        android:layout_toRightOf="@+id/tvDash"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvSpeedE"
+        android:layout_alignBaseline="@+id/tvSpeed"
+        android:layout_alignBottom="@+id/tvSpeed"
+        android:layout_alignLeft="@+id/tvRPME"
+        android:layout_alignStart="@+id/tvRPME"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>
