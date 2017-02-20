@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">cellapptest</string>
+    <string name="edit_message">Enter a message Kemals app</string>
+    <string name="button_send">Send</string>
+    <string name="button_bar">Bar Chart</string>
+    <string name="button_line">Line Chart</string>
+    <string name="button_inflater">Inflater</string>
 </resources>
