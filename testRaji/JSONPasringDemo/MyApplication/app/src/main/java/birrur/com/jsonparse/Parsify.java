@@ -6,7 +6,14 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -25,11 +32,29 @@ public class Parsify extends AppCompatActivity {
 
         String data = readSon();
 
-        Log.i(TAG, readSon());
+        //Log.i(TAG, readSon());
 
         gson = new Gson();
+
         dataSet = new Data();
         dataSet = gson.fromJson(data, dataSet.getClass());
+
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(data);
+        JsonObject object = element.getAsJsonObject();
+
+        try {
+            JSONObject ob = new JSONObject(data);
+            ob.keys();
+        } catch (JSONException e){
+
+        }
+
+
+        //JsonObject object = parser.parse(data).getAsJsonObject();
+        //JsonArray array = (JsonArray) parser.parse(data).getAsJsonObject().getAsJsonArray();
+        Log.i(TAG, "PRINTED");
+        Log.i(TAG, element.toString());
 
 
         TextView tvRPME = (TextView) findViewById(R.id.tvRPME);
