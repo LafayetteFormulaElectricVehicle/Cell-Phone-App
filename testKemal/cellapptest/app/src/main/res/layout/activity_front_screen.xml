@@ -18,4 +18,26 @@
         android:text="@string/button_send"
         android:onClick="sendMessage"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_inflater"
+        android:onClick="createInflater"
+        android:layout_weight="0.51" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_bar"
+        android:onClick="createBar"
+        android:layout_weight="0.51" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_line"
+        android:onClick="createLine"
+        android:id="@+id/button"
+        android:layout_weight="0.51" />
+
 </LinearLayout>

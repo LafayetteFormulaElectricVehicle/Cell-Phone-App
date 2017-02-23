@@ -2,12 +2,35 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main_layout"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
     <!-- Here is the inserted layout -->
-    <include layout="@layout/my_layout"/>
+    <!--<include layout="@layout/my_layout"/>-->
+
+    <Button
+        android:id="@+id/inflater_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_my_layout"
+        android:layout_gravity="bottom"
+        android:onClick="createNewInflater"/>
+
+    <Button
+        android:id="@+id/inflater_line_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_line"
+        android:layout_gravity="bottom"
+        android:onClick="createLineInflater"/>
+
+    <Button
+        android:id="@+id/inflater_bar_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_bar"
+        android:layout_gravity="bottom"
+        android:onClick="createBarInflater"/>
 
 </LinearLayout>

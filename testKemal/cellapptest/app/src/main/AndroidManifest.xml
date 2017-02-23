@@ -15,7 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplayMessageActivity"></activity>
+        <activity android:name=".DisplayMessageActivity" />
+        <activity android:name=".DraggableView" />
+        <activity android:name=".LayoutInflater" />
+        <activity android:name=".DisplayLineActivity" />
+        <activity android:name=".DisplayGrafActivity"/>
     </application>
 
 </manifest>
