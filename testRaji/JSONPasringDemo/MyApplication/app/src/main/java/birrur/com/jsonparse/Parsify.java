@@ -1,23 +1,18 @@
 package birrur.com.jsonparse;
 
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Parsify extends AppCompatActivity {
 
@@ -32,44 +27,47 @@ public class Parsify extends AppCompatActivity {
 
         String data = readSon();
 
-        //Log.i(TAG, readSon());
-
         gson = new Gson();
 
         dataSet = new Data();
         dataSet = gson.fromJson(data, dataSet.getClass());
 
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(data);
-        JsonObject object = element.getAsJsonObject();
+        Map<String, Object> parsed = gson.fromJson(data , LinkedHashMap.class);
 
-        try {
-            JSONObject ob = new JSONObject(data);
-            ob.keys();
-        } catch (JSONException e){
+        LinkedTreeMap<String, Object> dash = (LinkedTreeMap<String, Object>) parsed.get("dashboard");
+        LinkedTreeMap<String, Object> tsi  = (LinkedTreeMap<String, Object>) parsed.get("tsi");
+        LinkedTreeMap<String, Object> tsv  = (LinkedTreeMap<String, Object>) parsed.get("tsv");
+        LinkedTreeMap<String, Object> physics = (LinkedTreeMap<String, Object>) parsed.get("physics");
+        LinkedTreeMap<String, Object> cooling = (LinkedTreeMap<String, Object>) parsed.get("cooling");
 
-        }
-
-
-        //JsonObject object = parser.parse(data).getAsJsonObject();
-        //JsonArray array = (JsonArray) parser.parse(data).getAsJsonObject().getAsJsonArray();
         Log.i(TAG, "PRINTED");
-        Log.i(TAG, element.toString());
+        Log.i(TAG, dash.get("speed").toString());
 
+        Typeface type = Typeface.createFromAsset(getAssets(),"fonts/Sansita-Regular.ttf");
 
-        TextView tvRPME = (TextView) findViewById(R.id.tvRPME);
-        TextView tvSpeedE = (TextView) findViewById(R.id.tvVE);
-        TextView tvVE = (TextView) findViewById(R.id.tvVE);
-        TextView tvIE = (TextView) findViewById(R.id.tvIE);
-        TextView tvSocE = (TextView) findViewById(R.id.tvSocE);
-        TextView tvOnE = (TextView) findViewById(R.id.tvOnE);
+        TextView tvDD     = (TextView) findViewById(R.id.tvDash);
+        TextView tvCO     = (TextView) findViewById(R.id.tvCO);
+        TextView tvTS     = (TextView) findViewById(R.id.tvTS);
 
-        tvRPME.setText(dataSet.getDashboard().getRpm().toString());
-        tvSpeedE.setText(dataSet.getDashboard().getSpeed().toString());
-        tvVE.setText(dataSet.getTsv().getVoltage().toString());
-        tvIE.setText(dataSet.getTsv().getCurrent().toString());
-        tvSocE.setText(dataSet.getTsv().getStateOfCharge().toString());
-        tvOnE.setText(dataSet.getTsv().getEnabled().toString());
+        tvDD.setTypeface(type);
+        tvCO.setTypeface(type);
+        tvTS.setTypeface(type);
+
+        TextView tvRPME   = (TextView) findViewById(R.id.tvRPME);
+        TextView tvSpeedE = (TextView) findViewById(R.id.tvSpeedE);
+        TextView tvVE     = (TextView) findViewById(R.id.tvTE);
+        TextView tvIE     = (TextView) findViewById(R.id.tvIE);
+        TextView tvSocE   = (TextView) findViewById(R.id.tvSocE);
+        TextView tvOnE    = (TextView) findViewById(R.id.tvOnE);
+        TextView tvTE     = (TextView) findViewById(R.id.tvTE);
+
+        tvRPME.setText(dash.get("rpm").toString());
+        tvSpeedE.setText(dash.get("speed").toString());
+        tvVE.setText(tsv.get("voltage").toString());
+        tvIE.setText(tsv.get("current").toString());
+        tvSocE.setText(tsv.get("state_of_charge").toString());
+        tvOnE.setText(tsv.get("enabled").toString());
+        tvTE.setText(cooling.get("temp").toString());
     }
 
     public String readSon(){

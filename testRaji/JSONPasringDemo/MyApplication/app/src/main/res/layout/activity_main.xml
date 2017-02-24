@@ -15,23 +15,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_notify"
+        android:onClick="notificate"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="notificate"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:text="Parse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_parse"
-        android:layout_marginTop="21dp"
+        android:onClick="parsiate"
+        android:layout_marginTop="37dp"
         android:layout_below="@+id/button_notify"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="parsiate"/>
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

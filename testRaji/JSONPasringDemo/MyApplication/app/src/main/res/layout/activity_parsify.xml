@@ -18,29 +18,7 @@
         android:layout_alignParentStart="true"
         android:id="@+id/tvDash"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="18sp" />
-
-    <TextView
-        android:text="Speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvSpeed"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="21dp"
-        android:layout_below="@+id/tvDash"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="RPM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvRPM"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/tvSpeed"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="18sp"/>
 
     <TextView
         android:text="TextView"
@@ -66,40 +44,6 @@
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:text="TSV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="18sp"
-        android:layout_below="@+id/tvRPM"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="32dp" />
-
-    <TextView
-        android:text="Voltage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvV"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Current"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvI"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/tvV"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,8 +62,8 @@
         android:id="@+id/tvIE"
         android:layout_alignBaseline="@+id/tvI"
         android:layout_alignBottom="@+id/tvI"
-        android:layout_alignLeft="@+id/tvVE"
-        android:layout_alignStart="@+id/tvVE"
+        android:layout_alignLeft="@+id/tvTE"
+        android:layout_alignStart="@+id/tvTE"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -168,5 +112,96 @@
         android:layout_alignStart="@+id/tvSocE"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Cooling"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvCO"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="18sp"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/tvOn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTE"
+        android:layout_alignBaseline="@+id/textView12"
+        android:layout_alignBottom="@+id/textView12"
+        android:layout_alignLeft="@+id/tvVE"
+        android:layout_alignStart="@+id/tvVE"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView12"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/tvCO"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TSV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTS"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="18sp"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/tvRPM"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Voltage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvV"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/tvTS"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:text="RPM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvRPM"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="7dp"
+        android:layout_below="@+id/tvSpeed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvI"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/tvV"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvSpeed"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/tvDash"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
