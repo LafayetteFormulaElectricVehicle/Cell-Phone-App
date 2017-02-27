@@ -2,14 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="250dp"
     tools:context="com.lfev2017.ktdilsiz.cellapptest.DisplayLineActivity">
 
-<com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="200dp"
         android:id="@+id/linegraph"
-        android:duplicateParentState="true"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/hold_me_here"
+        android:layout_below="@id/linegraph"
+        android:gravity="center"/>
 
 </RelativeLayout>

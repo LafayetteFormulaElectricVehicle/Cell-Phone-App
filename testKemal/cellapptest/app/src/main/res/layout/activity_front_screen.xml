@@ -4,40 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <EditText android:id="@+id/edit_message"
-        android:layout_weight="1"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_message" />
+        android:hint="@string/edit_message"
+        android:layout_gravity="center"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/button_send"
-        android:onClick="sendMessage"/>
+        android:onClick="sendMessage"
+        android:layout_gravity="center"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/button_inflater"
         android:onClick="createInflater"
-        android:layout_weight="0.51" />
+        android:layout_gravity="center"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/button_bar"
         android:onClick="createBar"
-        android:layout_weight="0.51" />
+        android:layout_gravity="center"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/button_line"
         android:onClick="createLine"
         android:id="@+id/button"
-        android:layout_weight="0.51" />
+        android:layout_gravity="center"
+        />
 
 </LinearLayout>
