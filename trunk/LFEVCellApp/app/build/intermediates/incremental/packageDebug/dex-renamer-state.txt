@@ -1,7 +1,0 @@
-#Mon Mar 06 11:33:09 EST 2017
-base.0=C\:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_24e358b4c26c1b193ef093579d605e13c03126c0
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=C\:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_f59d5c1941d470c1d760990fc3e26d1883838bad\\classes.dex
-base.1=C\:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_f59d5c1941d470c1d760990fc3e26d1883838bad
-file.0=C\:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_24e358b4c26c1b193ef093579d605e13c03126c0\\classes.dex

@@ -6,5 +6,6 @@
     <string name="button_line">Line Chart</string>
     <string name="button_inflater">Inflater</string>
     <string name="button_my_layout">My Layout</string>
+    <string name="hold_me_here">Hold me here!</string>
 
 </resources>

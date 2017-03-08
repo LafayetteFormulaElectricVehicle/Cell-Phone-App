@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="10dp">
 
     <!-- Here is the inserted layout -->
     <!--<include layout="@layout/my_layout"/>-->
@@ -14,23 +14,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_my_layout"
-        android:layout_gravity="bottom"
-        android:onClick="createNewInflater"/>
+        android:onClick="createRawInflater"
+        android:layout_alignParentBottom="true"
+        />
 
     <Button
         android:id="@+id/inflater_line_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_line"
-        android:layout_gravity="bottom"
-        android:onClick="createLineInflater"/>
+        android:onClick="createLineInflater"
+        android:layout_above="@+id/inflater_button"
+        />
 
     <Button
         android:id="@+id/inflater_bar_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_bar"
-        android:layout_gravity="bottom"
-        android:onClick="createBarInflater"/>
+        android:onClick="createBarInflater"
+        android:layout_above="@+id/inflater_line_button"
+        />
 
-</LinearLayout>
+</RelativeLayout>

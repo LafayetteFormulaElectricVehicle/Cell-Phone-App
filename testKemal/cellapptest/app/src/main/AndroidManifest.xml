@@ -18,8 +18,8 @@
         <activity android:name=".DisplayMessageActivity" />
         <activity android:name=".DraggableView" />
         <activity android:name=".LayoutInflater" />
-        <activity android:name=".DisplayLineActivity" />
-        <activity android:name=".DisplayGrafActivity"/>
+        <activity android:name=".testing.DisplayLineActivity" />
+        <activity android:name=".testing.DisplayGrafActivity"/>
     </application>
 
 </manifest>
