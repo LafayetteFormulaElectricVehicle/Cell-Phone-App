@@ -1,4 +1,4 @@
-package com.lfev2017.ktdilsiz.cellapptest;
+package com.lfev2017.ktdilsiz.cellapptest.testing;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.lfev2017.ktdilsiz.cellapptest.DraggableView;
+import com.lfev2017.ktdilsiz.cellapptest.R;
 
 import android.view.MotionEvent;
 import android.view.View;

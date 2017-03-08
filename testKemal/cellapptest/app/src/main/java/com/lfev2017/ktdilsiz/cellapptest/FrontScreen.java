@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.content.Intent;
 
+import com.lfev2017.ktdilsiz.cellapptest.testing.DisplayGrafActivity;
+import com.lfev2017.ktdilsiz.cellapptest.testing.DisplayLineActivity;
+
 public class FrontScreen extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.lfev2017.ktdilsiz.cellapptest.MESSAGE";
 

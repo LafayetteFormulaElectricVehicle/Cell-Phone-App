@@ -1,4 +1,4 @@
-package com.lfev2017.ktdilsiz.cellapptest;
+package com.lfev2017.ktdilsiz.cellapptest.testing;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.lfev2017.ktdilsiz.cellapptest.DraggableView;
+import com.lfev2017.ktdilsiz.cellapptest.R;
 
 import java.util.ArrayList;
 import java.util.List;

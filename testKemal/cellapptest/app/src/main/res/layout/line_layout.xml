@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="250dp"
-    tools:context="com.lfev2017.ktdilsiz.cellapptest.DisplayLineActivity">
+    tools:context="com.lfev2017.ktdilsiz.cellapptest.testing.DisplayLineActivity">
 
     <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
