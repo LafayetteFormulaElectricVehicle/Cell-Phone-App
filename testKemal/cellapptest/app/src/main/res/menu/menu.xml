@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".LayoutInflater">
+
+    <item android:id="@+id/action_rawdata"
+        android:title="Add Raw Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:onClick="createRawInflater"
+        />
+
+    <item android:id="@+id/action_bardata"
+        android:title="Add Bar Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:onClick="createBarInflater"
+        />
+
+    <item android:id="@+id/action_linedata"
+        android:title="Add Line Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:onClick="createLineInflater"
+        />
+
+    <item android:id="@+id/action_updatedata"
+        android:title="Update Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:onClick="updateData"
+        />
+
+</menu>

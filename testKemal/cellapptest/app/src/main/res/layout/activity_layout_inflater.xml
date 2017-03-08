@@ -9,31 +9,31 @@
     <!-- Here is the inserted layout -->
     <!--<include layout="@layout/my_layout"/>-->
 
-    <Button
-        android:id="@+id/inflater_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_my_layout"
-        android:onClick="createRawInflater"
-        android:layout_alignParentBottom="true"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/inflater_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_my_layout"-->
+        <!--android:onClick="createRawInflater"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--/>-->
 
-    <Button
-        android:id="@+id/inflater_line_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_line"
-        android:onClick="createLineInflater"
-        android:layout_above="@+id/inflater_button"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/inflater_line_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_line"-->
+        <!--android:onClick="createLineInflater"-->
+        <!--android:layout_above="@+id/inflater_button"-->
+        <!--/>-->
 
-    <Button
-        android:id="@+id/inflater_bar_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_bar"
-        android:onClick="createBarInflater"
-        android:layout_above="@+id/inflater_line_button"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/inflater_bar_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_bar"-->
+        <!--android:onClick="createBarInflater"-->
+        <!--android:layout_above="@+id/inflater_line_button"-->
+        <!--/>-->
 
 </RelativeLayout>

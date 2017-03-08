@@ -16,7 +16,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/button_send"
+        android:text="Update URL"
         android:onClick="sendMessage"
         android:layout_gravity="center"
         />
@@ -32,7 +32,7 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="@string/button_bar"
+        android:text="@string/update_data"
         android:onClick="createBar"
         android:layout_gravity="center"
         />
