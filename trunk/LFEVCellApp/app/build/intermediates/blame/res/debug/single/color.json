@@ -1,0 +1,90 @@
+[
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_hint_foreground_material_light.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_hint_foreground_material_light.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/switch_thumb_material_light.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/switch_thumb_material_light.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_primary_text_material_dark.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_primary_text_material_dark.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/switch_thumb_material_dark.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/switch_thumb_material_dark.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_spinner.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_spinner.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_primary_text_disable_only_material_dark.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_primary_text_disable_only_material_dark.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_search_url_text.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_search_url_text.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_seek_thumb.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_seek_thumb.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/design_tint_password_toggle.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/a8a68166b15d755d9c1634300db1cf95ab1d48ad/output/res/color/design_tint_password_toggle.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_btn_colored_text_material.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_btn_colored_text_material.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_switch_thumb.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_switch_thumb.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_switch_track.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_switch_track.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_default.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_default.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_edittext.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_edittext.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/design_error.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/a8a68166b15d755d9c1634300db1cf95ab1d48ad/output/res/color/design_error.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_tint_btn_checkable.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_hint_foreground_material_dark.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_hint_foreground_material_dark.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_primary_text_material_light.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_secondary_text_material_light.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_secondary_text_material_light.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_primary_text_disable_only_material_light.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_secondary_text_material_dark.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/color/abc_btn_colored_borderless_text_material.xml",
+        "source": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/color/abc_btn_colored_borderless_text_material.xml"
+    }
+]

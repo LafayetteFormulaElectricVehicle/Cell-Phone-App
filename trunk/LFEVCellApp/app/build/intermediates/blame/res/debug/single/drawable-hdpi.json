@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/drawable-hdpi/ic_help.png",
+        "source": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/src/main/res/drawable-hdpi/ic_help.png"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/drawable-hdpi/ic_settings.png",
+        "source": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/src/main/res/drawable-hdpi/ic_settings.png"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/drawable-hdpi/ic_delete.png",
+        "source": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/src/main/res/drawable-hdpi/ic_delete.png"
+    }
+]

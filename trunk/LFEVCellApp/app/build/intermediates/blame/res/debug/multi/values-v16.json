@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v16/values-v16.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 65,
+                    "endOffset": 116
+                },
+                "from": {
+                    "file": "/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/res/values-v16/values-v16.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 65,
+                        "endOffset": 116
+                    }
+                }
+            }
+        ]
+    }
+]

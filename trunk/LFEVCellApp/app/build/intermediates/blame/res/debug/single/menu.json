@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/menu/activity_home_drawer.xml",
+        "source": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/src/main/res/menu/activity_home_drawer.xml"
+    },
+    {
+        "merged": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/res/merged/debug/menu/home.xml",
+        "source": "/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/src/main/res/menu/home.xml"
+    }
+]

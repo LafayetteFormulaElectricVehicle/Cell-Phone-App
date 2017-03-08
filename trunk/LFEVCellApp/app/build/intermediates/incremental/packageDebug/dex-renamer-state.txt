@@ -1,0 +1,7 @@
+#Mon Mar 06 22:42:42 EST 2017
+base.0=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_877dde5aaade47554d9864d0af657a34c2640728
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_dc4c4b30622e185a06c834b53ced09918a4ca22f/classes.dex
+base.1=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_dc4c4b30622e185a06c834b53ced09918a4ca22f
+file.0=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_877dde5aaade47554d9864d0af657a34c2640728/classes.dex

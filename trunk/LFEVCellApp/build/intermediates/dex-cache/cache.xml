@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/6ba3dc0f2f480f2d4de7dae54f00fb3978a44cfd/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_dbb4c637174b596503188bd2f9ded30ef9816833/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/e47628f95bc51ffe89d3c900e393956bc8e04f2e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1de27d7f9e690df6be46d5850450645ab4ca1bd2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/f7a5a6e916be833cb3438079cd9ea6c79d8971a9/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="810f41e5b7fd99f196ebeabe865ba2c54e7e76dc">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_971114d2dacf4bcb67b31aa05fb66fb1a4c17c27/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.1/constraint-layout-solver-1.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="1ad79631209e77b0a2730fc112b4cc0c66a95132">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/constraint-layout-solver-1.0.1_cc144a4b35f07b00aac6ae441881eb316096303e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/a8a68166b15d755d9c1634300db1cf95ab1d48ad/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ea6a989b83d19b1b461281e0475a6cd6514897f8">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3ca40589469a40a26b655bc658c270fa08608ffa/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_877dde5aaade47554d9864d0af657a34c2640728/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/ea50b06caf5df7feaaedff9642c676f7c73b69f8/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9d7e9009e06b0e28e603e9a42be8d9138a2b5d99/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.2.0/support-annotations-25.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4a5a82a027706397fff621b22fd6fa796e91d7c5">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-25.2.0_ea292ea04961b644fbab7c9970e12fef1453bfe4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/0341d5e1c436a2869b5003b8f60223870c70d964/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7113302c965566b66df46c6ca75ea301576114a5">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_02ed27fd960fc24cb13d2a26365fca540c28b33b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/444d73ac5b75407cd1b95c8ed79e5ad3e84121f6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_366878a09467eef2f8b85268ff2093d7a96a55e2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/6d83a72805f75ea0b2564e6d354c76d791ad436e/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0f75e28d68cad3a4a985154fc6ab83c07c993f66/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9f32857d54fd75b8dc5ac11f345bd3191b345324">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_dc4c4b30622e185a06c834b53ced09918a4ca22f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/b5c7f50c9afb7052108d56b24dab73d142d11c65/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9477c617a6b6e969b28c0610ef84ac8729b09ddb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/fd425ad70b9b686a5c6708fb01b6fa3fc71e444d/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_25bd830cc4510914b336f305fe46b65f6be1acbf/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/25d81ece6b5a71652a5e0b07459334045beadd44/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="152de8da301561dcb0946471697a420d8f7a68c5">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_1d836dc0f89a56faa34c5d0fad1493dbb983f606/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/98a6e0f7a69ed2f36fa5f541a2cea53a3001ec13/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_381fd57658c7d5cf6480db89975a05d08387431a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/ktdilsiz/.android/build-cache/53575dc91e2f4a9db6520e9cbdfd65609f8aae1b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e51c2f662bb72419632af5192553c37e33890a99">
+        <dex dex="/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b398660699e0b03222e170021a6732101c35e2f4/classes.dex" />
+    </item>
+
+</items>

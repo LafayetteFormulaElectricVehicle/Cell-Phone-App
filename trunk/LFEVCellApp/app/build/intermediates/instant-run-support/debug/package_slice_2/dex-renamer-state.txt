@@ -1,0 +1,4 @@
+#Mon Mar 06 22:40:25 EST 2017
+base.0=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_2
+renamed.0=classes.dex
+file.0=/home/ktdilsiz/Code/LFEV2017/Cell-Phone-App/trunk/LFEVCellApp/app/build/intermediates/transforms/dex/debug/folders/1000/5/slice_2/classes.dex
