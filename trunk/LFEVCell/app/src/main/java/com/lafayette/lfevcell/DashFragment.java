@@ -32,18 +32,19 @@ public class DashFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.dash_layout,null);
         mainText = (TextView) view.findViewById(R.id.textView);
+        Log.d("GG", json+"HHHHHHHHHH");
+        Log.d("GOT", "GOT HERE");
         new Rush().execute();
         return view;
     }
 
-    private class Rush extends AsyncTask {
+    private class Rush extends AsyncTask <Void, Void, String> {
         @Override
-        protected Object doInBackground(Object[] objects) {
-            makePostRequest();
-            return null;
+        protected String doInBackground(Void... arg0) {
+            return makePostRequest();
         }
 
-        private void makePostRequest() {
+        private String makePostRequest() {
             StringBuilder result = null;
             HttpURLConnection conn;
             BufferedReader rd;
@@ -52,6 +53,7 @@ public class DashFragment extends Fragment {
 
             try {
                 url = new URL("http://139.147.205.144:3000/dbquery/recent");
+                Log.d("GOT", "PAST URL");
                 result = new StringBuilder();
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
@@ -70,15 +72,14 @@ public class DashFragment extends Fragment {
 
             json = result.toString();
             Log.d("RESPONSE: ", json);
-            mainText.setText(json);
+            if(json != null){
+                mainText.setText(json);
+            }
+            return json;
         }
-    }
 
-    public void getJson (){
-        try{
-            json = dg.gogo();
-        }catch (Exception e) {
-            throw new RuntimeException();
+        protected void onPostExecute(String json){
+            super.onPostExecute(json);
         }
     }
 }
