@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\ic_delete.png",
+        "source": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\src\\main\\res\\drawable-xhdpi\\ic_delete.png"
+    },
+    {
+        "merged": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\ic_help.png",
+        "source": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\src\\main\\res\\drawable-xhdpi\\ic_help.png"
+    },
+    {
+        "merged": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\ic_settings.png",
+        "source": "C:\\Users\\birru\\Cell-Phone-App\\trunk\\LFEVCellApp\\app\\src\\main\\res\\drawable-xhdpi\\ic_settings.png"
+    }
+]
