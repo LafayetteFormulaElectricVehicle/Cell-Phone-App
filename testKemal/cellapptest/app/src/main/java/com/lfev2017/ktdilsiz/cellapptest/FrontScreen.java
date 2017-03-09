@@ -16,6 +16,7 @@ public class FrontScreen extends AppCompatActivity {
     DataHandler finalHandler;
     JsonHandler finalJson;
     String dataUrl;
+    String idHex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class FrontScreen extends AppCompatActivity {
 
         dataUrl = "http://139.147.194.194:3000/dbquery";
         finalHandler = new DataHandler();
+        idHex = "1";
     }
 
     public void sendMessage(View view){
@@ -43,6 +45,7 @@ public class FrontScreen extends AppCompatActivity {
         Intent intent = new Intent(this, LayoutInflater.class);
         intent.putExtra("hashmap", finalHandler.allSystems);
         intent.putExtra("url", dataUrl);
+        intent.putExtra("id", idHex);
 
         startActivity(intent);
     }
@@ -54,8 +57,13 @@ public class FrontScreen extends AppCompatActivity {
 
     /** Called when the user clicks the Send button */
     public void createLine(View view) {
-        Intent intent = new Intent(this, DisplayLineActivity.class);
-        startActivity(intent);
+        EditText editText = (EditText) findViewById(R.id.edit_id);
+        idHex = editText.getText().toString();
+
+        //intent.putExtra(EXTRA_MESSAGE, message);
+        //startActivity(intent);
+        Toast.makeText(this, "New id: " + idHex, Toast.LENGTH_SHORT).show();
+
     }
 
 }

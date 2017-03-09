@@ -37,6 +37,7 @@ public class LayoutInflater extends AppCompatActivity {
     HashMap<String, HashMap<String,String>> testHash;
     ObjectItem[] ObjectItemData;
     String dataUrl;
+    String idHex;
 
 
     @Override
@@ -47,8 +48,13 @@ public class LayoutInflater extends AppCompatActivity {
         testHash = (HashMap<String, HashMap<String,String>>) getIntent().getSerializableExtra("hashmap");
 
         dataUrl = getIntent().getStringExtra("url");
+        idHex = getIntent().getStringExtra("id");
 
-        test = testHash.get("1");
+        Toast.makeText(this, "Url: " + dataUrl, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "ID: " + idHex, Toast.LENGTH_SHORT).show();
+
+
+        test = testHash.get(idHex);
 
 //        for(int i = 0; i < 3; i++) {
 //            test.put("kemal" + i, "test");
