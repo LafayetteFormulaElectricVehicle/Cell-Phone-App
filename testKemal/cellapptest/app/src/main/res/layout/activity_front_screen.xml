@@ -53,4 +53,18 @@
         android:layout_gravity="center"
         />
 
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="SpeedoTest"
+        android:onClick="createSpeedo"
+        android:id="@+id/speedotest"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Url, \nUpdate ID, \n press Update Data, \n wait 30 seconds, \n press Inflater, \n add Raw Data from Options top right"/>
+
 </LinearLayout>

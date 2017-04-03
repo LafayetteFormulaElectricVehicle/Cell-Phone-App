@@ -38,7 +38,10 @@ public class HttpHandler{
             conn.setRequestMethod("GET");
             Log.e(TAG, "Step3");
             // read the response
-            InputStream in = new BufferedInputStream(conn.getInputStream());
+            InputStream pass = conn.getInputStream();
+            Log.e(TAG, "Step3.5");
+            InputStream in = new BufferedInputStream(pass);
+            //InputStream in = new BufferedInputStream(conn.getInputStream());
             Log.e(TAG, "Step4");
             response = convertStreamToString(in);
             Log.e(TAG, "Step5");

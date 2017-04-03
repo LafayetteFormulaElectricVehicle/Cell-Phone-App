@@ -21,6 +21,7 @@
         <activity android:name=".testing.DisplayLineActivity" />
         <activity android:name=".testing.DisplayGrafActivity"/>
         <activity android:name=".JsonHandler"/>
+        <activity android:name=".testing.TestView"/>
     </application>
 
 </manifest>

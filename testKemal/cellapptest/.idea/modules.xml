@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidWidgets/AndroidWidgets.iml" filepath="$PROJECT_DIR$/AndroidWidgets/AndroidWidgets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpeedometerView/SpeedometerView.iml" filepath="$PROJECT_DIR$/SpeedometerView/SpeedometerView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Volley/Volley.iml" filepath="$PROJECT_DIR$/Volley/Volley.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/cellapptest.iml" filepath="$PROJECT_DIR$/cellapptest.iml" />
     </modules>

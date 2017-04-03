@@ -32,4 +32,11 @@
         android:onClick="updateData"
         />
 
+    <item android:id="@+id/action_updatechart"
+        android:title="Update Chart"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:onClick="updateChartSize"
+        />
+
 </menu>

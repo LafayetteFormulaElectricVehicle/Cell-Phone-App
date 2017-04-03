@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 public class MyAdapter extends BaseAdapter {
@@ -22,6 +23,7 @@ public class MyAdapter extends BaseAdapter {
     public MyAdapter(Context mContext, Map<String, String> map) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
+        //Collections.sort(mData);
         this.mContext = mContext;
     }
 

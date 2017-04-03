@@ -7,8 +7,7 @@ import android.widget.EditText;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.lfev2017.ktdilsiz.cellapptest.testing.DisplayGrafActivity;
-import com.lfev2017.ktdilsiz.cellapptest.testing.DisplayLineActivity;
+import com.lfev2017.ktdilsiz.cellapptest.testing.TestView;
 
 public class FrontScreen extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.lfev2017.ktdilsiz.cellapptest.MESSAGE";
@@ -31,11 +30,11 @@ public class FrontScreen extends AppCompatActivity {
     public void sendMessage(View view){
         //Intent intent = new Intent(this, DisplayMessageActivity.class);
         EditText editText = (EditText) findViewById(R.id.edit_message);
-        dataUrl = "http://" + editText.getText().toString() + ":3000/dbquery";
+        dataUrl = "http://" + editText.getText().toString();
 
         //intent.putExtra(EXTRA_MESSAGE, message);
         //startActivity(intent);
-        Toast.makeText(this, "New url: " + dataUrl, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "New url: '" + dataUrl + "'", Toast.LENGTH_LONG).show();
 
     }
 
@@ -43,7 +42,7 @@ public class FrontScreen extends AppCompatActivity {
         //LayoutInflater test = new LayoutInflater(finalHandler.allSystems);
 
         Intent intent = new Intent(this, LayoutInflater.class);
-        intent.putExtra("hashmap", finalHandler.allSystems);
+        intent.putExtra("hashmap", finalHandler.allSystems.get(idHex));
         intent.putExtra("url", dataUrl);
         intent.putExtra("id", idHex);
 
@@ -52,7 +51,18 @@ public class FrontScreen extends AppCompatActivity {
 
     /** Called when the user clicks the Send button */
     public void createBar(View view) {
-        finalJson = new JsonHandler(finalHandler, dataUrl);
+        if(finalHandler.allSystems.isEmpty()) {
+            finalJson = new JsonHandler(finalHandler, dataUrl);
+        }else{
+
+        }
+
+        if(finalHandler.allSystems.isEmpty()){
+            Toast.makeText(this, "Please wait pulling data from '" + idHex + "'", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Data avaliable! From '" + idHex + "'", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     /** Called when the user clicks the Send button */
@@ -62,8 +72,13 @@ public class FrontScreen extends AppCompatActivity {
 
         //intent.putExtra(EXTRA_MESSAGE, message);
         //startActivity(intent);
-        Toast.makeText(this, "New id: " + idHex, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "New id: '" + idHex + "'", Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void createSpeedo(View view){
+        Intent intent = new Intent(this, TestView.class);
+        startActivity(intent);
     }
 
 }

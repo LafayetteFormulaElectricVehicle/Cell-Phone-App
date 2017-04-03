@@ -8,6 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AndroidWidgets" />
+            <option value="$PROJECT_DIR$/SpeedometerView" />
+            <option value="$PROJECT_DIR$/Volley" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

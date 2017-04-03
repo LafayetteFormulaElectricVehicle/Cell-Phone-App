@@ -1,13 +1,17 @@
 package com.lfev2017.ktdilsiz.cellapptest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,13 +43,15 @@ public class LayoutInflater extends AppCompatActivity {
     String dataUrl;
     String idHex;
 
+    View linechart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout_inflater);
 
-        testHash = (HashMap<String, HashMap<String,String>>) getIntent().getSerializableExtra("hashmap");
+        //testHash = (HashMap<String, HashMap<String,String>>) getIntent().getSerializableExtra("hashmap");
+        test = (HashMap<String, String>) getIntent().getSerializableExtra("hashmap");
 
         dataUrl = getIntent().getStringExtra("url");
         idHex = getIntent().getStringExtra("id");
@@ -53,8 +59,13 @@ public class LayoutInflater extends AppCompatActivity {
         Toast.makeText(this, "Url: " + dataUrl, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "ID: " + idHex, Toast.LENGTH_SHORT).show();
 
+        //test = testHash.get(idHex);
 
-        test = testHash.get(idHex);
+//        if(test == null){
+//            Toast.makeText(this, "No data avaliable", Toast.LENGTH_LONG).show();
+//        }else{
+//            Toast.makeText(this, "Data avaliable!", Toast.LENGTH_LONG).show();
+//        }
 
 //        for(int i = 0; i < 3; i++) {
 //            test.put("kemal" + i, "test");
@@ -75,6 +86,39 @@ public class LayoutInflater extends AppCompatActivity {
         return true;
     }
 
+    public void updateChartSize(MenuItem item){
+
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        View inputLayout = inflater.inflate(R.layout.alert_x_y, null);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Title");
+        alert.setMessage("Message");
+        alert.setView(inputLayout);
+
+// Set an EditText view to get user input
+        //final LinearLayout inputLayout = (LinearLayout) findViewById(R.id.UserInputXY);
+        final EditText x_input = (EditText) inputLayout.findViewById(R.id.x_input);
+        final EditText y_input = (EditText) inputLayout.findViewById(R.id.y_input);
+        //final EditText x_input = new EditText(this);
+
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                linechart.setLayoutParams(new RelativeLayout.LayoutParams(Integer.parseInt(x_input.getText().toString()), Integer.parseInt(y_input.getText().toString())));
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
     public void updateData(MenuItem item){
         DataHandler newHandler = new DataHandler();
         JsonHandler finalJson = new JsonHandler(newHandler, dataUrl);
@@ -82,139 +126,43 @@ public class LayoutInflater extends AppCompatActivity {
         Toast.makeText(this, "Data updated from: " + dataUrl, Toast.LENGTH_SHORT).show();
 
         testHash = newHandler.allSystems;
+
+        test = testHash.get(idHex);
+
+        if(test == null){
+            Toast.makeText(this, "No data avaliable", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Data avaliable!", Toast.LENGTH_LONG).show();
+        }
     }
 
-    public void createNewInflater(View view){
-        // get a reference to the already created main layout
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
+     public void createRawInflater(MenuItem item){
 
-        // inflate (create) another copy of our custom layout
-        android.view.LayoutInflater inflater = getLayoutInflater();
-        View myLayout = inflater.inflate(R.layout.my_layout, mainLayout, false);
+        try {
+            RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
+            //RelativeLayout subLayout = (RelativeLayout) findViewById(R.id.rawdataview);
 
-        // make changes to our custom layout and its subviews
-        myLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-        TextView textView = (TextView) myLayout.findViewById(R.id.textView);
-        textView.setText("New Layout");
+            android.view.LayoutInflater inflater = getLayoutInflater();
+            View myLayout = inflater.inflate(R.layout.rawdata_layout, mainLayout, false);
 
-        // add our custom layout to the main layout
-        mainLayout.addView(myLayout);
-
-        //myLayout.setOnLongClickListener(new MyOnLongClickListener(myLayout));
-        myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
-        //myLayout.setOnDragListener(new MyOnDragListener());
-
-    }
-
-    public void createRawInflater(View view){
-
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-        //RelativeLayout subLayout = (RelativeLayout) findViewById(R.id.rawdataview);
-
-        android.view.LayoutInflater inflater = getLayoutInflater();
-        View myLayout = inflater.inflate(R.layout.rawdata_layout, mainLayout, false);
-
-        //subLayout.addView(list);
+            //subLayout.addView(list);
             mainLayout.addView(myLayout);
 
-        //Context input = myLayout.getContext();
+            //Context input = myLayout.getContext();
 
-        MyAdapter adapter = new MyAdapter(myLayout.getContext(), test);
+            MyAdapter adapter = new MyAdapter(myLayout.getContext(), test);
 
-        ListView list = (ListView) findViewById(R.id.rawdatalist);
-        //ListView list = new ListView(this);
-        list.setAdapter(adapter);
+            ListView list = (ListView) findViewById(R.id.rawdatalist);
+            //ListView list = new ListView(this);
+            list.setAdapter(adapter);
 
             //myLayout.setOnLongClickListener(new MyOnLongClickListener(myLayout));
-        myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
+            myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
             //myLayout.setOnDragListener(new MyOnDragListener());
-    }
 
-    public void createTestInflater(View view){
-        ArrayAdapterItem adapter = new ArrayAdapterItem(this, R.layout.list_view_row_item, ObjectItemData);
-
-        // create a new ListView, set the adapter and item click listener
-        //ListView listViewItems = new ListView(this);
-        ListView listViewItems = (ListView) findViewById(R.id.rawdatalist);
-        //listViewItems.setAdapter(adapter);
-
-
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-
-        android.view.LayoutInflater inflater = getLayoutInflater();
-        //View myLayout = inflater.inflate(R.layout.list_view_row_item, mainLayout, false);
-
-        mainLayout.addView(listViewItems);
-
-        listViewItems.setAdapter(adapter);
-    }
-
-    public void createLineInflater(View view){
-        // get a reference to the already created main layout
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-
-        // inflate (create) another copy of our custom layout
-        android.view.LayoutInflater inflater = getLayoutInflater();
-        View myLayout = inflater.inflate(R.layout.line_layout, mainLayout, false);
-
-        mainLayout.addView(myLayout);
-
-        LineChart lineChart = (LineChart) findViewById(R.id.linegraph);
-        LineChartGenerator newGenerator = new LineChartGenerator();
-        newGenerator.chartPopulate(lineChart);
-
-        //myLayout.setOnLongClickListener(new MyOnLongClickListener(myLayout));
-        myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
-        //myLayout.setOnDragListener(new MyOnDragListener());
-    }
-
-    public void createBarInflater(View view){
-        // get a reference to the already created main layout
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-
-        // inflate (create) another copy of our custom layout
-        android.view.LayoutInflater inflater = getLayoutInflater();
-
-        View myLayout = inflater.inflate(R.layout.bar_layout, mainLayout, false);
-        mainLayout.addView(myLayout);
-
-    //        DisplayGrafActivity newgraf = new DisplayGrafActivity();
-    //
-    //        newgraf.createElsewhere();
-
-        BarChart barChart = (BarChart) findViewById(R.id.bargraph);
-        BarChartGenerator newGenerator = new BarChartGenerator();
-        newGenerator.chartPopulate(barChart);
-
-
-        //myLayout.setOnLongClickListener(new MyOnLongClickListener(myLayout));
-        myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
-        //myLayout.setOnDragListener(new MyOnDragListener());
-
-    }
-
-    public void createRawInflater(MenuItem item){
-
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-        //RelativeLayout subLayout = (RelativeLayout) findViewById(R.id.rawdataview);
-
-        android.view.LayoutInflater inflater = getLayoutInflater();
-        View myLayout = inflater.inflate(R.layout.rawdata_layout, mainLayout, false);
-
-        //subLayout.addView(list);
-        mainLayout.addView(myLayout);
-
-        //Context input = myLayout.getContext();
-
-        MyAdapter adapter = new MyAdapter(myLayout.getContext(), test);
-
-        ListView list = (ListView) findViewById(R.id.rawdatalist);
-        //ListView list = new ListView(this);
-        list.setAdapter(adapter);
-
-        //myLayout.setOnLongClickListener(new MyOnLongClickListener(myLayout));
-        myLayout.setOnTouchListener(new MyOnTouchListener(myLayout));
-        //myLayout.setOnDragListener(new MyOnDragListener());
+        }catch (Exception e){
+            Toast.makeText(this, "Couldn't connect, url: " + dataUrl + " id: "+ idHex, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void createLineInflater(MenuItem item){
@@ -226,6 +174,8 @@ public class LayoutInflater extends AppCompatActivity {
         View myLayout = inflater.inflate(R.layout.line_layout, mainLayout, false);
 
         mainLayout.addView(myLayout);
+
+        linechart = myLayout;
 
         LineChart lineChart = (LineChart) findViewById(R.id.linegraph);
         LineChartGenerator newGenerator = new LineChartGenerator();
