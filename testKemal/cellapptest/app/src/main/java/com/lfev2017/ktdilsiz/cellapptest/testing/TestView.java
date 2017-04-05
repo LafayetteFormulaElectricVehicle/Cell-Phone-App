@@ -77,24 +77,24 @@ public class TestView extends AppCompatActivity {
         com.github.mikephil.charting.charts.BarChart newChart = new com.github.mikephil.charting.charts.BarChart(this);
         newChart.setLayoutParams(new ActionBar.LayoutParams(1000,1000));
 
-//        SpeedometerView newTestGauge = new SpeedometerView(this);
-//
-//        newTestGauge.setLabelConverter(new SpeedometerView.LabelConverter() {
-//            @Override
-//            public String getLabelFor(double progress, double maxProgress) {
-//                return String.valueOf((int) Math.round(progress));
-//            }
-//        });
-//
-//        newTestGauge.setMaxSpeed(500);
-//        newTestGauge.setMajorTickStep(100);
-//        newTestGauge.setMinorTicks(2);
-//        newTestGauge.setLayoutParams(new ActionBar.LayoutParams(1800,1800));
+        com.cardiomood.android.controls.gauge.SpeedometerGauge newTestGauge = new com.cardiomood.android.controls.gauge.SpeedometerGauge(this);
+
+        newTestGauge.setLabelConverter(new com.cardiomood.android.controls.gauge.SpeedometerGauge.LabelConverter() {
+            @Override
+            public String getLabelFor(double progress, double maxProgress) {
+                return String.valueOf((int) Math.round(progress));
+            }
+        });
+
+        newTestGauge.setMaxSpeed(500);
+        newTestGauge.setMajorTickStep(100);
+        newTestGauge.setMinorTicks(2);
+        newTestGauge.setLayoutParams(new ActionBar.LayoutParams(1800,1800));
 
         newLayout.addView(testView);
         newLayout.addView(newGauge);
         newLayout.addView(newChart);
-        //newLayout.addView(newTestGauge);
+        newLayout.addView(newTestGauge);
         //android.view.LayoutInflater inflater = getLayoutInflater();
         //mainLayout.addView(newLayout);
         mainLayout.addView(newLayout);
