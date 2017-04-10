@@ -1,4 +1,4 @@
-package com.lfev2017.ktdilsiz.cellapptest.Listeners;
+package com.cellvscada.lfev2017.Listeners;
 
 import android.content.ClipData;
 import android.view.MotionEvent;
@@ -9,14 +9,14 @@ import android.widget.Toast;
  * Created by ktdilsiz on 2/27/17.
  */
 
-public class MyOnTouchListener implements View.OnTouchListener{
+public class OnTouchListener implements View.OnTouchListener{
 
     View img;
     float dX;
     float dY;
     int lastAction;
 
-    public MyOnTouchListener(View input){
+    public OnTouchListener(View input){
         this.img = input;
     }
 

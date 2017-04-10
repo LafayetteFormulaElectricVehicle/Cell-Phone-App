@@ -11,4 +11,42 @@
         android:onClick="addNewPage"
         />
 
+    <item android:id="@+id/action_RawView"
+        android:title="Add Raw Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+    />
+
+    <item android:id="@+id/action_GaugeView"
+        android:title="Add Gauge"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_BarChartView"
+        android:title="Add Bar Chart"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_LineChartView"
+        android:title="Add Line Chart"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="action_TestFragment"
+        android:title="Fragment Test"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+
+    <item android:id="@+id/action_resize_view"
+        android:title="Resize a View"
+        android:orderInCategory="100"
+        android:onClick="updateChartSize"
+        app:showAsAction="never"
+        />
+
+
 </menu>

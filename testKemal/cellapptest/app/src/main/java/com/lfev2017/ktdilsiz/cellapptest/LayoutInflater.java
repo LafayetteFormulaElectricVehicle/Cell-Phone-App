@@ -97,7 +97,7 @@ public class LayoutInflater extends AppCompatActivity {
         alert.setMessage("Message");
         alert.setView(inputLayout);
 
-// Set an EditText view to get user input
+        // Set an EditText view to get user input
         //final LinearLayout inputLayout = (LinearLayout) findViewById(R.id.UserInputXY);
         final EditText x_input = (EditText) inputLayout.findViewById(R.id.x_input);
         final EditText y_input = (EditText) inputLayout.findViewById(R.id.y_input);
