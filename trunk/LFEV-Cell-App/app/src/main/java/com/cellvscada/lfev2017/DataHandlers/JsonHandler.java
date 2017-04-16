@@ -1,5 +1,6 @@
 package com.cellvscada.lfev2017.DataHandlers;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 
 public class JsonHandler extends AppCompatActivity {
 
+    private static final String TAG = JsonHandler.class.getSimpleName();
+
     JSONObject jObject;
     TextView texttest;
     String jsonTest;
@@ -24,11 +27,13 @@ public class JsonHandler extends AppCompatActivity {
 
     Context context;
 
+    private ProgressDialog pdia;
+
     DataHandler dataHandler;
 
     boolean finished;
 
-    AsyncTask<Void, Void, Void> getData;
+    //AsyncTask<Void, Void, Void> getData;
 
     public JsonHandler(){
 
@@ -61,7 +66,11 @@ public class JsonHandler extends AppCompatActivity {
         this.context = context;
         this.finished = finished;
 
-        new GetJson().execute();
+        try {
+            new GetJson().execute().get();
+        }catch (InterruptedException | java.util.concurrent.ExecutionException e){
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
     }
 
     public void getDataFromURL(){
@@ -151,6 +160,9 @@ public class JsonHandler extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pdia = new ProgressDialog(context);
+            pdia.setMessage("Loading...");
+            pdia.show();
         }
 
         @Override
@@ -160,8 +172,14 @@ public class JsonHandler extends AppCompatActivity {
             if(context != null) {
                 Toast.makeText(context, "Completed Data Acquisition", Toast.LENGTH_SHORT).show();
             }
-
+            pdia.dismiss();
+            finished = true;
         }
+
+    }
+
+    public boolean isFinished(){
+        return finished;
     }
 
 }

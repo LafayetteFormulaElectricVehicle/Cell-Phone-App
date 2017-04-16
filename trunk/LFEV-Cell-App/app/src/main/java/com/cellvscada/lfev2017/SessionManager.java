@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -48,6 +49,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class SessionManager extends AppCompatActivity {
 
@@ -144,6 +147,17 @@ public class SessionManager extends AppCompatActivity {
 
     }
 
+    public void addRawDataView(String id, String startDate, String endDate){
+
+        FrameLayout currentLayout = (FrameLayout) getCurrentPage();
+        RawDataGenerator newGenerator = new RawDataGenerator(this, finalHandler.idToAll.get(id)[0]);
+
+        newGenerator.adapterSetup(finalHandler.allSystems.get(id).subMap(startDate,endDate));
+
+        currentLayout.addView(newGenerator.getView());
+
+    }
+
     public void addGaugeViewTest(){
         FrameLayout currentLayout = (FrameLayout) getCurrentPage();
         GaugeGenerator newGauge = new GaugeGenerator(this);
@@ -169,6 +183,26 @@ public class SessionManager extends AppCompatActivity {
         newBar.barChartSetup();
         int i = 0;
         for(Map.Entry<String, String> entry : finalHandler.allSystems.get(id).entrySet()){
+
+            newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            i++;
+        }
+
+        newBar.setYaxis("Values");
+        newBar.setBarData();
+        newBar.finalSetup();
+        currentLayout.addView(newBar.getView());
+    }
+
+    public void addBarChartView(String id, String startDate, String endDate){
+        FrameLayout currentLayout = (FrameLayout) getCurrentPage();
+
+        SortedMap<String, String> dataMap = finalHandler.allSystems.get(id).subMap(startDate, endDate);
+
+        BarChartGenerator newBar = new BarChartGenerator(this);
+        newBar.barChartSetup();
+        int i = 0;
+        for(Map.Entry<String, String> entry : dataMap.entrySet()){
 
             newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
             i++;
@@ -207,6 +241,33 @@ public class SessionManager extends AppCompatActivity {
         currentLayout.addView(newLineChart.getView());
     }
 
+    public void addLineChartView(String[] idList, String startDate, String endDate){
+        FrameLayout currentLayout = (FrameLayout) getCurrentPage();
+
+        LineChartGenerator newLineChart = new LineChartGenerator(this);
+        newLineChart.lineChartSetup();
+
+        ArrayList<Float> newLine = new ArrayList<>();
+
+        Random rnd = new Random();
+        int color;
+
+        for(int i = 0; i < Array.getLength(idList); i++){
+
+            for(Map.Entry<String, String> entry : finalHandler.allSystems.get(idList[i]).subMap(startDate,endDate).entrySet()){
+                newLine.add(Float.parseFloat(entry.getValue()));
+            }
+            color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            newLineChart.addLine(newLine, idList[i] , (color));
+            newLine = new ArrayList<>();
+        }
+
+        newLineChart.setYaxis("Values");
+        newLineChart.multipleLineSetData();
+        newLineChart.finalSetup();
+        currentLayout.addView(newLineChart.getView());
+    }
+
     public void addBarParameters(){
         final AlertDialog alert = new AlertDialog.Builder(this).create();
 
@@ -227,11 +288,10 @@ public class SessionManager extends AppCompatActivity {
         spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
         newLayout.addView(spinner);
 
-
-        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
         newLayout.addView(startGenerator.getPicker());
 
-        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
         Button finished = new Button(this);
@@ -239,9 +299,13 @@ public class SessionManager extends AppCompatActivity {
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBarChartView(xaxis.getText().toString().toUpperCase());
-                String spinout = spinner.getSelectedItem().toString();
-                Toast.makeText(context, spinout, Toast.LENGTH_SHORT).show();
+
+                if(startGenerator.isNull() || endGenerator.isNull()){
+                    addBarChartView(xaxis.getText().toString().toUpperCase());
+                }else{
+                    addBarChartView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                }
+
                 alert.dismiss();
             }
         });
@@ -270,10 +334,10 @@ public class SessionManager extends AppCompatActivity {
         numberOfLines.setHint("How many different sensors?");
         newLayout.addView(numberOfLines);
 
-        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
         newLayout.addView(startGenerator.getPicker());
 
-        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
         Button finished = new Button(this);
@@ -281,7 +345,12 @@ public class SessionManager extends AppCompatActivity {
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addLineChartDataSets(numberOfLines.getValue());
+                if(startGenerator.isNull() || endGenerator.isNull()){
+                    addLineChartDataSets(numberOfLines.getValue(), null, null);
+                }else{
+                    addLineChartDataSets(numberOfLines.getValue(), startGenerator.getDate(), endGenerator.getDate());
+                }
+                //addLineChartDataSets(numberOfLines.getValue());
                 alert.dismiss();
             }
         });
@@ -292,7 +361,7 @@ public class SessionManager extends AppCompatActivity {
         alert.show();
     }
 
-    public void addLineChartDataSets(final int numberOfLines){
+    public void addLineChartDataSets(final int numberOfLines, final String startDate, final String endDate){
         final AlertDialog alert = new AlertDialog.Builder(this).create();
 
         alert.setTitle("Line Chart Parameters");
@@ -328,7 +397,11 @@ public class SessionManager extends AppCompatActivity {
                     lineIDs[i] = lines[i].getText().toString().toUpperCase();
                 }
 
-                addLineChartView(lineIDs);
+                if(startDate == null || endDate == null) {
+                    addLineChartView(lineIDs);
+                }else{
+                    addLineChartView(lineIDs, startDate, endDate);
+                }
 
                 alert.dismiss();
             }
@@ -360,10 +433,10 @@ public class SessionManager extends AppCompatActivity {
         spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
         newLayout.addView(spinner);
 
-        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
         newLayout.addView(startGenerator.getPicker());
 
-        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
         Button finished = new Button(this);
@@ -371,7 +444,11 @@ public class SessionManager extends AppCompatActivity {
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addRawDataView(xaxis.getText().toString().toUpperCase());
+                if(startGenerator.isNull() || endGenerator.isNull()){
+                    addRawDataView(xaxis.getText().toString().toUpperCase());
+                }else{
+                    addRawDataView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                }
                 alert.dismiss();
             }
         });
@@ -504,9 +581,16 @@ public class SessionManager extends AppCompatActivity {
     //DATABASE STUFF
     public void updateData() {
 
-        //finalJson.getDataFromURL();
+        finalJson = new JsonHandler(finalHandler, dataUrl, this);
+        Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
+
+        //pullingDataAlert();
+    }
+
+    public void updateData(String startDate, String endDate) {
 
         finalJson = new JsonHandler(finalHandler, dataUrl, this);
+        Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
 
     }
 

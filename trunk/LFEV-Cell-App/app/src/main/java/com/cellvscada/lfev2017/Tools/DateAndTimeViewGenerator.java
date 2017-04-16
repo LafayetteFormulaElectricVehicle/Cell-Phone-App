@@ -3,6 +3,7 @@ package com.cellvscada.lfev2017.Tools;
 import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -201,6 +202,38 @@ public class DateAndTimeViewGenerator{
 
     public String getDay(){
         return day.getText().toString();
+    }
+
+    public boolean isNull(){
+
+        String hourString = hour.getText().toString().trim();
+        String minuteString = minute.getText().toString().trim();
+        String secondString = second.getText().toString().trim();
+        String yearString = year.getText().toString().trim();
+        String monthString = month.getText().toString().trim();
+        String dayString = day.getText().toString().trim();
+
+        return TextUtils.isEmpty(hourString) ||
+                TextUtils.isEmpty(minuteString) ||
+                TextUtils.isEmpty(secondString) ||
+                TextUtils.isEmpty(yearString) ||
+                TextUtils.isEmpty(monthString) ||
+                TextUtils.isEmpty(dayString);
+    }
+
+    public String getDate(){
+
+        return getYear() +
+                "-" +
+                getMonth() +
+                "-" +
+                getDay() +
+                " " +
+                getHour() +
+                ":" +
+                getMinute() +
+                ":" +
+                getSecond();
     }
 
 }

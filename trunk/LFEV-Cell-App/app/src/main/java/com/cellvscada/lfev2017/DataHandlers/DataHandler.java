@@ -1,7 +1,14 @@
 package com.cellvscada.lfev2017.DataHandlers;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.awt.font.TextAttribute;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -9,7 +16,7 @@ import java.util.TreeMap;
  */
 
 public class DataHandler {
-        public HashMap<String, Map<String, String>> allSystems;
+        public HashMap<String, TreeMap<String, String>> allSystems;
         public TreeMap<String, String> newSystem;
         public TreeMap<String, String> tagToId;
         //[0] tag, [1] system, [2] unit
@@ -23,7 +30,33 @@ public class DataHandler {
 
     public void enterValue(String key, String timeStamp, String value){
         if(allSystems.get(key) == null){
-            newSystem = new TreeMap<>();
+            newSystem = new TreeMap<String, String>(){
+                @NonNull
+                @Override
+                public SortedMap<String, String> subMap(String first, String second){
+
+                    Set<String> keySet = newSystem.keySet();
+                    Iterator<String> iterator = keySet.iterator();
+
+                    String start = first;
+                    if(iterator.hasNext()) {
+                        start = iterator.next();
+                    }else{
+                        return super.subMap(first, second);
+                    }
+                    String end = start;
+
+                    while ((start.compareTo(first) <= 0) && iterator.hasNext()){
+                        start = iterator.next();
+                    }
+
+                    while ((end.compareTo(second) <= 0) && iterator.hasNext()){
+                        end = iterator.next();
+                    }
+
+                    return super.subMap(start, end);
+                }
+            };
             newSystem.put(timeStamp, value);
             allSystems.put(key, newSystem);
         }else{
