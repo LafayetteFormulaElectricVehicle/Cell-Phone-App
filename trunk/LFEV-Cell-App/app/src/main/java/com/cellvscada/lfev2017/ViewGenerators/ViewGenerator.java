@@ -1,6 +1,8 @@
 package com.cellvscada.lfev2017.ViewGenerators;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -41,15 +43,25 @@ public class ViewGenerator {
         topLayout.setOrientation(LinearLayout.VERTICAL);
         topLayout.setLayoutParams(new ActionBar.LayoutParams(widthDP, heightDP));
 
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(0xFFFFFFFF); //white background
+        border.setStroke(1, 0xFF000000); //black border with full opacity
+
         holdHere = new TextView(context);
         holdHere.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
-                        convertToDP(metrics, heightHold)
+                        convertToDP(metrics, heightHold-20)
                 )
         );
         holdHere.setText("Hold me here!");
+        holdHere.setPadding(convertToDP(metrics, 10), 0, convertToDP(metrics, 10), 0);
         holdHere.setGravity(Gravity.CENTER);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            holdHere.setBackgroundDrawable(border);
+        } else {
+            holdHere.setBackground(border);
+        }
 
         topLayout.setOnTouchListener(new OnTouchListener(topLayout));
     }

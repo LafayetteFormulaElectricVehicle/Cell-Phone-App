@@ -1,9 +1,11 @@
 package com.cellvscada.lfev2017.DataHandlers;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +22,13 @@ public class JsonHandler extends AppCompatActivity {
     String jsonTest;
     String dataUrl;
 
+    Context context;
+
     DataHandler dataHandler;
+
+    boolean finished;
+
+    AsyncTask<Void, Void, Void> getData;
 
     public JsonHandler(){
 
@@ -28,12 +36,35 @@ public class JsonHandler extends AppCompatActivity {
 
     public JsonHandler(DataHandler dataHandler){
         this.dataHandler = dataHandler;
+
         new GetJson().execute();
     }
 
     public JsonHandler(DataHandler dataHandler, String dataUrl){
         this.dataHandler = dataHandler;
         this.dataUrl = dataUrl;
+
+        new GetJson().execute();
+    }
+
+    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context){
+        this.dataHandler = dataHandler;
+        this.dataUrl = dataUrl;
+        this.context = context;
+
+        new GetJson().execute();
+    }
+
+    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context, boolean finished){
+        this.dataHandler = dataHandler;
+        this.dataUrl = dataUrl;
+        this.context = context;
+        this.finished = finished;
+
+        new GetJson().execute();
+    }
+
+    public void getDataFromURL(){
         new GetJson().execute();
     }
 //    @Override
@@ -81,15 +112,26 @@ public class JsonHandler extends AppCompatActivity {
                             Log.e("Test", tempArr.toString());
 
                             Log.e("Test", tempArr.get(0) +
-                                    tempArr.get(2).toString() +
-                                    tempArr.get(1).toString());
+                                    tempArr.get(5).toString() +
+                                    tempArr.get(4).toString());
 
                             //key, timestamp, value
                             dataHandler.enterValue(tempArr.get(0).toString(),
-                                    tempArr.get(6).toString(),
-                                    tempArr.get(5).toString()
+                                    tempArr.get(5).toString(),
+                                    tempArr.get(4).toString()
                             );
 
+                            dataHandler.enterTagtoID(
+                                    tempArr.get(1).toString(),
+                                    tempArr.get(0).toString()
+                            );
+
+                            dataHandler.enterIDtoAll(
+                                    tempArr.get(0).toString(),
+                                    tempArr.get(1).toString(),
+                                    tempArr.get(2).toString(),
+                                    tempArr.get(3).toString()
+                            );
 
                         }
 
@@ -111,11 +153,15 @@ public class JsonHandler extends AppCompatActivity {
             super.onPreExecute();
         }
 
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//            Toast.makeText(getApplicationContext(), "Completed Data Acquisition", Toast.LENGTH_SHORT).show();
-//        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.e("Test", "Completed Update");
+            if(context != null) {
+                Toast.makeText(context, "Completed Data Acquisition", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
 }

@@ -1,6 +1,8 @@
 package com.cellvscada.lfev2017.ViewGenerators;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -16,6 +18,7 @@ import com.cellvscada.lfev2017.Adapters.HashMapAdapter;
 import com.cellvscada.lfev2017.Listeners.OnTouchListener;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ktdilsiz on 4/5/17.
@@ -34,8 +37,21 @@ public class RawDataGenerator extends ViewGenerator {
     int heightDP;
     int widthDP;
 
+    String id;
+
     public RawDataGenerator(Context context){
         this.context = context;
+
+        metrics = context.getResources().getDisplayMetrics();
+        heightDP = convertToDP(metrics, HEIGHT);
+        widthDP = convertToDP(metrics, WIDTH);
+
+        setup();
+    }
+
+    public RawDataGenerator(Context context, String id){
+        this.context = context;
+        this.id = id;
 
         metrics = context.getResources().getDisplayMetrics();
         heightDP = convertToDP(metrics, HEIGHT);
@@ -56,6 +72,19 @@ public class RawDataGenerator extends ViewGenerator {
         setup();
     }
 
+    public RawDataGenerator(Context context, int h, int w, String id){
+        this.context = context;
+        this.HEIGHT = h;
+        this.WIDTH = w;
+        this.id = id;
+
+        metrics = context.getResources().getDisplayMetrics();
+        heightDP = convertToDP(metrics, HEIGHT);
+        widthDP = convertToDP(metrics, WIDTH);
+
+        setup();
+    }
+
     private void setup(){
         int height = 50;
 
@@ -63,14 +92,35 @@ public class RawDataGenerator extends ViewGenerator {
         topLayout.setOrientation(LinearLayout.VERTICAL);
         topLayout.setLayoutParams(new ActionBar.LayoutParams(widthDP, heightDP));
 
+        if(id != null) {
+            TextView title = new TextView(context);
+            title.setText(id);
+            topLayout.addView(title);
+        }
+
         listForValues = new ListView(context);
         int tempHeightDP = heightDP - convertToDP(metrics, height);
         listForValues.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, tempHeightDP));
 
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(0xFFFFFFFF); //white background
+        border.setStroke(1, 0xFF000000); //black border with full opacity
+
         holdHere = new TextView(context);
-        holdHere.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, convertToDP(metrics, height)));
+        holdHere.setLayoutParams(
+                new ActionBar.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        convertToDP(metrics, height-20)
+                )
+        );
         holdHere.setText("Hold me here!");
+        holdHere.setPadding(convertToDP(metrics, 10), 0, convertToDP(metrics, 10), 0);
         holdHere.setGravity(Gravity.CENTER);
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            holdHere.setBackgroundDrawable(border);
+        } else {
+            holdHere.setBackground(border);
+        }
 
         topLayout.addView(listForValues);
         topLayout.addView(holdHere);
@@ -79,7 +129,7 @@ public class RawDataGenerator extends ViewGenerator {
 
     }
 
-    public void adapterSetup(HashMap<String, String> data){
+    public void adapterSetup(Map<String, String> data){
         HashMapAdapter adapter = new HashMapAdapter(context, data);
         listForValues.setAdapter(adapter);
     }

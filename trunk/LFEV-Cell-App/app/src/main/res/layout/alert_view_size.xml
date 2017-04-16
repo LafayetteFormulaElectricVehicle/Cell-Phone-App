@@ -8,12 +8,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/x_input"
-        android:hint="x-axis"/>
+        android:hint="field 1"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/y_input"
-        android:hint="y-axis"/>
+        android:hint="field 2"/>
 
 </LinearLayout>

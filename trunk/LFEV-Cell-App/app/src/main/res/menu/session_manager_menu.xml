@@ -11,35 +11,31 @@
         android:onClick="addNewPage"
         />
 
-    <item android:id="@+id/action_RawView"
-        android:title="Add Raw Data"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-    />
-
-    <item android:id="@+id/action_GaugeView"
-        android:title="Add Gauge"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
-    <item android:id="@+id/action_BarChartView"
-        android:title="Add Bar Chart"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
-    <item android:id="@+id/action_LineChartView"
-        android:title="Add Line Chart"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        />
-
-    <item android:id="action_TestFragment"
+    <item android:id="@+id/action_TestFragment"
         android:title="Fragment Test"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"
+        />
 
+
+    <item android:id="@+id/action_UpdateData"
+        android:title="Update Data"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_UpdateURLandID"
+        android:title="Update URL"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/action_addView"
+        android:title="Add View"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
 
     <item android:id="@+id/action_resize_view"
         android:title="Resize a View"

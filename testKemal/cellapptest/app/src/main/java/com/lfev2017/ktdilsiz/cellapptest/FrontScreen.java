@@ -22,7 +22,7 @@ public class FrontScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_front_screen);
 
-        dataUrl = "http://139.147.194.194:3000/dbquery";
+        dataUrl = "http://139.147.205.24:3000/dbquery/recent";
         finalHandler = new DataHandler();
         idHex = "1";
     }

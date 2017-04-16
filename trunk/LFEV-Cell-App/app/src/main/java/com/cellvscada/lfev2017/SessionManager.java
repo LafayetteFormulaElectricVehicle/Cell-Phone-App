@@ -1,5 +1,8 @@
 package com.cellvscada.lfev2017;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.app.FragmentManager;
@@ -15,10 +18,24 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.cellvscada.lfev2017.Adapters.HashMapAdapter;
 import com.cellvscada.lfev2017.Adapters.MainPagerAdapter;
+import com.cellvscada.lfev2017.DataHandlers.DataHandler;
+import com.cellvscada.lfev2017.DataHandlers.JsonHandler;
+import com.cellvscada.lfev2017.Tools.DateAndTimeViewGenerator;
+import com.cellvscada.lfev2017.Tools.EditTextNumeric;
 import com.cellvscada.lfev2017.Tools.MenuFragment;
 import com.cellvscada.lfev2017.ViewGenerators.BarChartGenerator;
 import com.cellvscada.lfev2017.ViewGenerators.GaugeGenerator;
@@ -26,8 +43,11 @@ import com.cellvscada.lfev2017.ViewGenerators.LineChartGenerator;
 import com.cellvscada.lfev2017.ViewGenerators.RawDataGenerator;
 import com.github.mikephil.charting.charts.LineChart;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class SessionManager extends AppCompatActivity {
 
@@ -35,10 +55,22 @@ public class SessionManager extends AppCompatActivity {
     private MainPagerAdapter pagerAdapter = null;
     private LayoutInflater inflater;
 
+    DataHandler finalHandler;
+    JsonHandler finalJson;
+    String dataUrl;
+    String idHex;
+
+    Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
+
+        dataUrl = "http://139.147.194.194:3000/dbquery/recent";
+        finalHandler = new DataHandler();
+        //finalJson = new JsonHandler(finalHandler, dataUrl, this);
+        idHex = "MRPM";
 
         pagerAdapter = new MainPagerAdapter();
         pager = (ViewPager) findViewById(R.id.view_pager);
@@ -101,20 +133,13 @@ public class SessionManager extends AppCompatActivity {
         pagerAdapter.notifyDataSetChanged();
     }
 
-    public void addViewTest(){
+    public void addRawDataView(String id){
 
         FrameLayout currentLayout = (FrameLayout) getCurrentPage();
+        RawDataGenerator newGenerator = new RawDataGenerator(this, finalHandler.idToAll.get(id)[0]);
 
-        HashMap<String, String> list = new HashMap<>();
-        list.put("04/03/2017 12:59", "The webserver has started running.");
-        list.put("04/03/2017 17:58", "A device has connected to the webserver.");
-        list.put("04/03/2017 17:57", "A device requested data from the server.");
-        list.put("04/03/2017 17:56", "A sudden shutdown has been experienced.");
-        //list.put("04/03/2017 17:55", "I like unicorns.");
-        //list.put("04/03/2017 17:54", "1801");
+        newGenerator.adapterSetup(finalHandler.allSystems.get(id));
 
-        RawDataGenerator newGenerator = new RawDataGenerator(this);
-        newGenerator.adapterSetup(list);
         currentLayout.addView(newGenerator.getView());
 
     }
@@ -137,21 +162,25 @@ public class SessionManager extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void addBarChartView(){
+    public void addBarChartView(String id){
         FrameLayout currentLayout = (FrameLayout) getCurrentPage();
 
         BarChartGenerator newBar = new BarChartGenerator(this);
         newBar.barChartSetup();
-        for(int i = 0; i < 6; i++){
-            newBar.insertYaxis(i, 80-i);
+        int i = 0;
+        for(Map.Entry<String, String> entry : finalHandler.allSystems.get(id).entrySet()){
+
+            newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            i++;
         }
+
         newBar.setYaxis("Values");
         newBar.setBarData();
         newBar.finalSetup();
         currentLayout.addView(newBar.getView());
     }
 
-    public void addLineChartView(){
+    public void addLineChartView(String[] idList){
         FrameLayout currentLayout = (FrameLayout) getCurrentPage();
 
         LineChartGenerator newLineChart = new LineChartGenerator(this);
@@ -159,11 +188,16 @@ public class SessionManager extends AppCompatActivity {
 
         ArrayList<Float> newLine = new ArrayList<>();
 
-        for(float i = 0; i < 6; i++){
-            for(float j = 0; j < 6; j++) {
-                newLine.add(80 - j - i);
+        Random rnd = new Random();
+        int color;
+
+        for(int i = 0; i < Array.getLength(idList); i++){
+
+            for(Map.Entry<String, String> entry : finalHandler.allSystems.get(idList[i]).entrySet()){
+                newLine.add(Float.parseFloat(entry.getValue()));
             }
-            newLineChart.addLine(newLine, "Line" + i, (int) (Color.BLACK + (i)*12345));
+            color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            newLineChart.addLine(newLine, idList[i] , (color));
             newLine = new ArrayList<>();
         }
 
@@ -173,22 +207,263 @@ public class SessionManager extends AppCompatActivity {
         currentLayout.addView(newLineChart.getView());
     }
 
+    public void addBarParameters(){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        alert.setTitle("Bar Chart Parameters");
+        alert.setMessage("Please set the parameters");
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final EditText xaxis = new EditText(this);
+        xaxis.setHint("X-Axis for Chart");
+        newLayout.addView(xaxis);
+
+        final Spinner spinner = new Spinner(this);
+        spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        newLayout.addView(spinner);
+
+
+        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        newLayout.addView(startGenerator.getPicker());
+
+        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        newLayout.addView(endGenerator.getPicker());
+
+        Button finished = new Button(this);
+        finished.setHint("Create The Chart");
+        finished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBarChartView(xaxis.getText().toString().toUpperCase());
+                String spinout = spinner.getSelectedItem().toString();
+                Toast.makeText(context, spinout, Toast.LENGTH_SHORT).show();
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(finished);
+
+        scrollView.addView(newLayout);
+        alert.setView(scrollView);
+        alert.show();
+    }
+
+    public void addLineParameters(){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        alert.setTitle("Line Chart Parameters");
+        alert.setMessage("Please set the parameters");
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final EditTextNumeric numberOfLines = new EditTextNumeric(this);
+        numberOfLines.setMaxLength(1);
+        numberOfLines.setMinValue(0);
+        numberOfLines.setHint("How many different sensors?");
+        newLayout.addView(numberOfLines);
+
+        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        newLayout.addView(startGenerator.getPicker());
+
+        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        newLayout.addView(endGenerator.getPicker());
+
+        Button finished = new Button(this);
+        finished.setHint("Select the Data");
+        finished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLineChartDataSets(numberOfLines.getValue());
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(finished);
+
+        scrollView.addView(newLayout);
+        alert.setView(scrollView);
+        alert.show();
+    }
+
+    public void addLineChartDataSets(final int numberOfLines){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        alert.setTitle("Line Chart Parameters");
+        alert.setMessage("Please set the parameters");
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final Spinner spinner = new Spinner(this);
+        spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        newLayout.addView(spinner);
+
+        final EditText[] lines = new EditText[numberOfLines];
+
+        for(int i = 0; i < numberOfLines; i++) {
+            final EditText newLine = new EditText(this);
+            newLine.setHint("Which Value to show:" + (i + 1));
+            lines[i] = newLine;
+            newLayout.addView(newLine);
+        }
+
+        Button finished = new Button(this);
+        finished.setHint("Create The Chart");
+        finished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] lineIDs = new String[numberOfLines];
+
+                for(int i = 0; i < Array.getLength(lines); i++){
+                    lineIDs[i] = lines[i].getText().toString().toUpperCase();
+                }
+
+                addLineChartView(lineIDs);
+
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(finished);
+
+        scrollView.addView(newLayout);
+        alert.setView(scrollView);
+        alert.show();
+    }
+
+    public void addRawParameters(){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        alert.setTitle("Raw Data Parameters");
+        alert.setMessage("Please set the parameters");
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final EditText xaxis = new EditText(this);
+        xaxis.setHint("Which Value to show");
+        newLayout.addView(xaxis);
+
+        final Spinner spinner = new Spinner(this);
+        spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        newLayout.addView(spinner);
+
+        DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        newLayout.addView(startGenerator.getPicker());
+
+        DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        newLayout.addView(endGenerator.getPicker());
+
+        Button finished = new Button(this);
+        finished.setHint("Create The Data View");
+        finished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRawDataView(xaxis.getText().toString().toUpperCase());
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(finished);
+
+        scrollView.addView(newLayout);
+        alert.setView(scrollView);
+        alert.show();
+    }
+
+    public void addView(){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final Button addGaugeView = new Button(this);
+        addGaugeView.setHint("Add Gauge");
+        addGaugeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addGaugeViewTest();
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(addGaugeView);
+
+        Button addLineView = new Button(this);
+        addLineView.setHint("Add Line Chart");
+        addLineView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLineParameters();
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(addLineView);
+
+        Button addBarView = new Button(this);
+        addBarView.setHint("Add Bar Chart");
+        addBarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBarParameters();
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(addBarView);
+
+
+        //PLEASE CHANGE THE NAME OF THE ADDVIEWTEST
+        Button addRawView = new Button(this);
+        addRawView.setHint("Add Raw Data");
+        addRawView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRawParameters();
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(addRawView);
+
+        //AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("ID");
+        alert.setMessage("Please set new ID");
+        alert.setView(newLayout);
+
+        alert.show();
+    }
+
     public boolean onOptionsItemSelected(MenuItem item){
 
         switch (item.getItemId()){
-            case R.id.action_GaugeView:
-                addGaugeViewTest();
+            case R.id.action_TestFragment:
+                addFragmentOptions();
                 return true;
-            case R.id.action_RawView:
-                addViewTest();
+            case R.id.action_UpdateData:
+                updateData();
                 return true;
-            case R.id.action_BarChartView:
-                addBarChartView();
+            case R.id.action_UpdateURLandID:
+                updateURL();
                 return true;
-            case R.id.action_LineChartView:
-                addLineChartView();
+            case R.id.action_addView:
+                    addView();
+//                if(!finalHandler.allSystems.isEmpty()) {
+//                    addView();
+//                }else{
+//                    Toast.makeText(this, "Please update the data first", Toast.LENGTH_SHORT).show();
+//                }
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -214,6 +489,72 @@ public class SessionManager extends AppCompatActivity {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //linechart.setLayoutParams(new RelativeLayout.LayoutParams(Integer.parseInt(x_input.getText().toString()), Integer.parseInt(y_input.getText().toString())));
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    //DATABASE STUFF
+    public void updateData() {
+
+        //finalJson.getDataFromURL();
+
+        finalJson = new JsonHandler(finalHandler, dataUrl, this);
+
+    }
+
+    public EditText[] createAlert(String[] fieldNames, LinearLayout newLayout){
+        int size = Array.getLength(fieldNames);
+        EditText[] textFields = new EditText[size];
+        for(int i = 0; i < size; i++){
+            EditText newText = new EditText(this);
+            newText.setHint(fieldNames[i]);
+            textFields[i] = newText;
+            newLayout.addView(newText);
+        }
+
+        return textFields;
+    }
+
+    public void updateURL(){
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        String[] fields = new String[1];
+        fields[0] = "URL";
+        final EditText[] textFields = createAlert(fields, newLayout);
+
+        final CheckBox addRecent = new CheckBox(this);
+        addRecent.setHint("Add /recent");
+
+        newLayout.addView(addRecent);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("URL");
+        alert.setMessage("Please set new URL");
+        alert.setView(newLayout);
+
+        // Set an EditText view to get user input
+        //final LinearLayout inputLayout = (LinearLayout) findViewById(R.id.UserInputXY);
+        final EditText idInput = textFields[0];
+        //final EditText x_input = new EditText(this);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if(addRecent.isChecked()){
+                    dataUrl = "http://" + textFields[0].getText().toString() + ":3000/dbquery/recent";
+                }else{
+                    dataUrl = "http://" + textFields[0].getText().toString() + ":3000/dbquery";
+                }
             }
         });
 
