@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -16,7 +17,9 @@ import android.widget.TextView;
 
 import com.cellvscada.lfev2017.Adapters.HashMapAdapter;
 import com.cellvscada.lfev2017.Listeners.OnTouchListener;
+import com.cellvscada.lfev2017.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +34,13 @@ public class RawDataGenerator extends ViewGenerator {
     TextView holdHere;
     Context context;
     DisplayMetrics metrics;
+    HashMapAdapter adapter;
 
     int HEIGHT = 300;
     int WIDTH = 250;
     int heightDP;
     int widthDP;
+    int holdHereHeight = 50;
 
     String id;
 
@@ -129,9 +134,20 @@ public class RawDataGenerator extends ViewGenerator {
 
     }
 
+    public void purgeItems(){
+        listForValues = new ListView(context);
+        int tempHeightDP = heightDP - convertToDP(metrics, holdHereHeight);
+        listForValues.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, tempHeightDP));
+    }
+
     public void adapterSetup(Map<String, String> data){
-        HashMapAdapter adapter = new HashMapAdapter(context, data);
+        adapter = new HashMapAdapter(context, data);
         listForValues.setAdapter(adapter);
+        //listForValues.setAdapter(new ArrayAdapter<>(context, R.layout.my_adapter_item, android.R.id.text1 ,list));
+    }
+
+    public HashMapAdapter getAdapter(){
+        return adapter;
     }
 
     public View getView(){

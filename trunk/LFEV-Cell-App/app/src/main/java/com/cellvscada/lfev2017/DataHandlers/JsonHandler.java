@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cellvscada.lfev2017.Tools.DateAndTimeViewGenerator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ import org.json.JSONObject;
  * Created by ktdilsiz on 3/7/17.
  */
 
-public class JsonHandler extends AppCompatActivity {
+public class JsonHandler extends AsyncTask<Void, Void, Void>  {
 
     private static final String TAG = JsonHandler.class.getSimpleName();
 
@@ -32,6 +34,10 @@ public class JsonHandler extends AppCompatActivity {
     DataHandler dataHandler;
 
     boolean finished;
+    boolean wantNotification;
+    boolean exception;
+    boolean wantAllData;
+    boolean constantUpdate;
 
     //AsyncTask<Void, Void, Void> getData;
 
@@ -39,43 +45,40 @@ public class JsonHandler extends AppCompatActivity {
 
     }
 
-    public JsonHandler(DataHandler dataHandler){
-        this.dataHandler = dataHandler;
-
-        new GetJson().execute();
-    }
-
-    public JsonHandler(DataHandler dataHandler, String dataUrl){
-        this.dataHandler = dataHandler;
-        this.dataUrl = dataUrl;
-
-        new GetJson().execute();
-    }
-
     public JsonHandler(DataHandler dataHandler, String dataUrl, Context context){
         this.dataHandler = dataHandler;
         this.dataUrl = dataUrl;
         this.context = context;
 
-        new GetJson().execute();
+        wantNotification = true;
+        wantAllData = true;
     }
 
-    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context, boolean finished){
+    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context, boolean wantNotification){
         this.dataHandler = dataHandler;
         this.dataUrl = dataUrl;
         this.context = context;
-        this.finished = finished;
-
-        try {
-            new GetJson().execute().get();
-        }catch (InterruptedException | java.util.concurrent.ExecutionException e){
-            Log.e(TAG, "Exception: " + e.getMessage());
-        }
+        this.wantNotification = wantNotification;
+        wantAllData = true;
     }
 
-    public void getDataFromURL(){
-        new GetJson().execute();
+    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context, boolean wantNotification, boolean wantAllData){
+        this.dataHandler = dataHandler;
+        this.dataUrl = dataUrl;
+        this.context = context;
+        this.wantNotification = wantNotification;
+        this.wantAllData = wantAllData;
     }
+
+    public JsonHandler(DataHandler dataHandler, String dataUrl, Context context, boolean wantNotification, boolean wantAllData, boolean constantUpdate){
+        this.dataHandler = dataHandler;
+        this.dataUrl = dataUrl;
+        this.context = context;
+        this.wantNotification = wantNotification;
+        this.wantAllData = wantAllData;
+        this.constantUpdate = constantUpdate;
+    }
+
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -83,11 +86,8 @@ public class JsonHandler extends AppCompatActivity {
 //
 //        texttest = ((TextView) this.findViewById(R.id.jsonTestText));
 //
-//        new GetJson().execute();
-//
 //    }
 
-    private class GetJson extends AsyncTask<Void, Void, Void>{
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -96,7 +96,7 @@ public class JsonHandler extends AppCompatActivity {
                 if (dataUrl != null) {
                     url = dataUrl;
                 } else {
-                    url = "http://139.147.194.194:3000/dbquery";
+                    url = "http://139.147.205.136:3000/dbquery";
                 }
 
                 String jsonStr = sh.makeServiceCall(url);
@@ -110,7 +110,7 @@ public class JsonHandler extends AppCompatActivity {
 
                 //Toast.makeText(getParent().getApplicationContext(), jsonStr + "1test", Toast.LENGTH_SHORT).show();
 
-                Log.e("Test", jsonStr);
+                //Log.e("Test", jsonStr);
 
                 if (jsonStr != null) {
                     try {
@@ -118,11 +118,11 @@ public class JsonHandler extends AppCompatActivity {
 
                         for (int i = 0; i < jsonObj.length(); i++) {
                             JSONArray tempArr = jsonObj.getJSONArray(i);
-                            Log.e("Test", tempArr.toString());
+                            //Log.e("Test", tempArr.toString());
 
-                            Log.e("Test", tempArr.get(0) +
-                                    tempArr.get(5).toString() +
-                                    tempArr.get(4).toString());
+//                            Log.e("Test", tempArr.get(0) +
+//                                    tempArr.get(5).toString() +
+//                                    tempArr.get(4).toString());
 
                             //key, timestamp, value
                             dataHandler.enterValue(tempArr.get(0).toString(),
@@ -130,27 +130,32 @@ public class JsonHandler extends AppCompatActivity {
                                     tempArr.get(4).toString()
                             );
 
-                            dataHandler.enterTagtoID(
-                                    tempArr.get(1).toString(),
-                                    tempArr.get(0).toString()
-                            );
 
-                            dataHandler.enterIDtoAll(
-                                    tempArr.get(0).toString(),
-                                    tempArr.get(1).toString(),
-                                    tempArr.get(2).toString(),
-                                    tempArr.get(3).toString()
-                            );
+                            if(wantAllData) {
+                                dataHandler.enterTagtoID(
+                                        tempArr.get(1).toString(),
+                                        tempArr.get(0).toString()
+                                );
+
+                                dataHandler.enterIDtoAll(
+                                        tempArr.get(0).toString(),
+                                        tempArr.get(1).toString(),
+                                        tempArr.get(2).toString(),
+                                        tempArr.get(3).toString()
+                                );
+                            }
 
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Log.e("JSONException", e.getMessage());
+                        exception = true;
                     }
 
                 }
             }catch (Exception e){
+                exception = true;
                 //Toast.makeText(getBaseContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
@@ -160,23 +165,35 @@ public class JsonHandler extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pdia = new ProgressDialog(context);
-            pdia.setMessage("Loading...");
-            pdia.show();
+            if(wantNotification) {
+                pdia = new ProgressDialog(context);
+                pdia.setMessage("Loading...");
+                pdia.show();
+            }
+
+            dataHandler.renewLast();
+
+            finished = false;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            dataHandler.generateArrayLists();
             Log.e("Test", "Completed Update");
-            if(context != null) {
-                Toast.makeText(context, "Completed Data Acquisition", Toast.LENGTH_SHORT).show();
+            if(wantNotification && !exception) {
+                if (context != null) {
+                    Toast.makeText(context, "Completed Data Acquisition", Toast.LENGTH_SHORT).show();
+                }
+                pdia.dismiss();
             }
-            pdia.dismiss();
+
+            if(exception){
+                Toast.makeText(context, "Couldn't connect to webserver, please check either IP entered", Toast.LENGTH_SHORT).show();
+            }
+
             finished = true;
         }
-
-    }
 
     public boolean isFinished(){
         return finished;

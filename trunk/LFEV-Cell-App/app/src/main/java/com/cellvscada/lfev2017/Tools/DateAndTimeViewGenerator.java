@@ -4,11 +4,15 @@ import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by ktdilsiz on 4/14/17.
@@ -51,6 +55,7 @@ public class DateAndTimeViewGenerator{
         day.setMaxLength(2);
         day.setMinValue(0);
         day.setMaxValue(31);
+        day.setId(("day" + title).hashCode());
         day.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -64,6 +69,7 @@ public class DateAndTimeViewGenerator{
         month.setMaxLength(2);
         month.setMinValue(0);
         month.setMaxValue(12);
+        month.setId(("month" + title).hashCode());
         month.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -76,6 +82,7 @@ public class DateAndTimeViewGenerator{
         year.setMaxLength(4);
         year.setMinValue(0);
         year.setMaxValue(2030);
+        year.setId(("year" + title).hashCode());
         year.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -106,6 +113,9 @@ public class DateAndTimeViewGenerator{
         dateLayout.addView(slash2);
         dateLayout.addView(day);
 
+        year.setNextFocusDownId(month.getId());
+        month.setNextFocusDownId(day.getId());
+
         ////////////////TIME
 
         hour = new EditTextNumeric(context);
@@ -113,6 +123,7 @@ public class DateAndTimeViewGenerator{
         hour.setMaxLength(2);
         hour.setMinValue(0);
         hour.setMaxValue(23);
+        hour.setId(("hour" + title).hashCode());
         hour.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -125,6 +136,7 @@ public class DateAndTimeViewGenerator{
         minute.setMaxLength(2);
         minute.setMinValue(0);
         minute.setMaxValue(59);
+        minute.setId(("minute" + title).hashCode());
         minute.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -137,6 +149,7 @@ public class DateAndTimeViewGenerator{
         second.setMaxLength(2);
         second.setMinValue(0);
         second.setMaxValue(59);
+        second.setId(("second" + title).hashCode());
         second.setLayoutParams(
                 new ActionBar.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -168,12 +181,32 @@ public class DateAndTimeViewGenerator{
         timeLayout.addView(dots2);
         timeLayout.addView(second);
 
+        day.setNextFocusDownId(hour.getId());
+        hour.setNextFocusDownId(minute.getId());
+        minute.setNextFocusDownId(second.getId());
+
+//        second.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                Toast.makeText(context, event.toString(), Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
         TextView titleView = new TextView(context);
         titleView.setText(title);
 
         linearLayout.addView(titleView);
         linearLayout.addView(dateLayout);
         linearLayout.addView(timeLayout);
+    }
+
+    public int getFocusID(){
+        return year.getId();
+    }
+
+    public void setNextDownFocusID(int id){
+        second.setNextFocusDownId(id);
     }
 
     public LinearLayout getPicker(){
@@ -221,6 +254,10 @@ public class DateAndTimeViewGenerator{
                 TextUtils.isEmpty(dayString);
     }
 
+    public void setVisibility(int visibility){
+        linearLayout.setVisibility(visibility);
+    }
+
     public String getDate(){
 
         return getYear() +
@@ -233,6 +270,20 @@ public class DateAndTimeViewGenerator{
                 ":" +
                 getMinute() +
                 ":" +
+                getSecond();
+    }
+
+    public String getDateHttp(){
+        return getYear() +
+                "-" +
+                getMonth() +
+                "-" +
+                getDay() +
+                "%20" +
+                getHour() +
+                "%3A" +
+                getMinute() +
+                "%3A" +
                 getSecond();
     }
 

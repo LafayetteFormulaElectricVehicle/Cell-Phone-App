@@ -28,6 +28,9 @@ public class LineChartGenerator extends ViewGenerator {
 
     List<ILineDataSet> allLines;
 
+    boolean addingUpdate;
+    boolean replacingUpdate;
+
     int HEIGHT = 250;
     int WIDTH = 300;
 

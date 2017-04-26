@@ -15,17 +15,38 @@ import android.widget.TextView;
 import com.cellvscada.lfev2017.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class HashMapAdapter extends BaseAdapter {
-    private final ArrayList mData;
+    private ArrayList mData;
     private final Context mContext;
+    private Map<String, String> map;
 
     public HashMapAdapter(Context mContext, Map<String, String> map) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
         //Collections.sort(mData);
         this.mContext = mContext;
+        this.map = map;
+    }
+
+    public void addData(Map<String, String> map){
+        new ArrayList();
+        for(Map.Entry each : map.entrySet()) {
+            if(!mData.contains(each))
+                mData.add(each);
+            //mData.addAll(map.entrySet());
+        }
+        //Collections.sort(mData);
+    }
+
+    public void setData(Map<String, String> map){
+        mData = new ArrayList();
+        mData.addAll(map.entrySet());
     }
 
     @Override
@@ -43,6 +64,9 @@ public class HashMapAdapter extends BaseAdapter {
         // TODO implement you own logic with ID
         return 0;
     }
+
+    //@Override
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

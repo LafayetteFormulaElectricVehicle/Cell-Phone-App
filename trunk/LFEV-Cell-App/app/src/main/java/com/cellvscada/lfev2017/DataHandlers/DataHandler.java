@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.awt.font.TextAttribute;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,15 +18,27 @@ import java.util.TreeMap;
 
 public class DataHandler {
         public HashMap<String, TreeMap<String, String>> allSystems;
+        public HashMap<String, TreeMap<String, String>> lastUpdate;
+
         public TreeMap<String, String> newSystem;
         public TreeMap<String, String> tagToId;
         //[0] tag, [1] system, [2] unit
         public HashMap<String, String[]> idToAll;
 
+        public ArrayList<String> tags;
+        public ArrayList<String> IDs;
+
     public DataHandler(){
         tagToId = new TreeMap<>();
         idToAll = new HashMap<>();
         allSystems = new HashMap<>();
+        lastUpdate = new HashMap<>();
+        tags = new ArrayList<>();
+        IDs = new ArrayList<>();
+    }
+
+    public void renewLast(){
+        lastUpdate = new HashMap<>();
     }
 
     public void enterValue(String key, String timeStamp, String value){
@@ -59,6 +72,7 @@ public class DataHandler {
             };
             newSystem.put(timeStamp, value);
             allSystems.put(key, newSystem);
+            lastUpdate.put(key, newSystem);
         }else{
             allSystems.get(key).put(timeStamp, value);
         }
@@ -83,6 +97,15 @@ public class DataHandler {
             return true;
         }else{
             return false;
+        }
+    }
+
+    public void generateArrayLists(){
+        for (String key: tagToId.keySet()) {
+            if(!tags.contains(key))
+                tags.add(key);
+            if(!IDs.contains(tagToId.get(key)))
+                IDs.add(tagToId.get(key));
         }
     }
 

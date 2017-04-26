@@ -32,6 +32,7 @@ public class HttpHandler {
             Log.e(TAG, "Step1" + reqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             Log.e(TAG, "Step2");
+            System.setProperty("http.keepAlive", "false");
             conn.setRequestMethod("GET");
             Log.e(TAG, "Step3");
             // read the response

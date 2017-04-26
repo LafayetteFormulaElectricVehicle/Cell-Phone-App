@@ -8,19 +8,27 @@ import android.graphics.Color;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
+import android.os.HandlerThread;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -28,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -42,15 +51,19 @@ import com.cellvscada.lfev2017.ViewGenerators.BarChartGenerator;
 import com.cellvscada.lfev2017.ViewGenerators.GaugeGenerator;
 import com.cellvscada.lfev2017.ViewGenerators.LineChartGenerator;
 import com.cellvscada.lfev2017.ViewGenerators.RawDataGenerator;
+import com.cellvscada.lfev2017.ViewGenerators.ViewGenerator;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.lang.reflect.Array;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
+import android.os.Handler;
 
 public class SessionManager extends AppCompatActivity {
 
@@ -59,21 +72,51 @@ public class SessionManager extends AppCompatActivity {
     private LayoutInflater inflater;
 
     DataHandler finalHandler;
+    DataHandler constantHandler;
     JsonHandler finalJson;
+    JsonHandler constantJson;
     String dataUrl;
+    String dataUrlRecent;
     String idHex;
 
     Context context = this;
+
+    ArrayList<HashMapAdapter> allAdapters;
+    ArrayList<Map<String, String>> allMaps;
+    ArrayList<BarChartGenerator> allBars;
+
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            keepUpdating(dataUrlRecent);
+            if(!allAdapters.isEmpty()) {
+                for(int i = 0; i < allMaps.size(); i++) {
+                    allAdapters.get(i).setData(allMaps.get(i));
+                    allAdapters.get(i).notifyDataSetChanged();
+                }
+            }
+            if(!allBars.isEmpty()){
+                updateBarChartData();
+            }
+            handler.postDelayed(this, delay);
+        }
+    };
+    int delay = 5000; //milliseconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
 
-        dataUrl = "http://139.147.194.194:3000/dbquery/recent";
+        dataUrl = "http://139.147.205.136:3000/dbquery";
+        dataUrlRecent = dataUrl + "/recent";
+
         finalHandler = new DataHandler();
-        //finalJson = new JsonHandler(finalHandler, dataUrl, this);
-        idHex = "MRPM";
+        constantHandler = new DataHandler();
+        allAdapters = new ArrayList<>();
+        allMaps = new ArrayList<>();
+        allBars = new ArrayList<>();
 
         pagerAdapter = new MainPagerAdapter();
         pager = (ViewPager) findViewById(R.id.view_pager);
@@ -86,6 +129,7 @@ public class SessionManager extends AppCompatActivity {
         FrameLayout v0 = (FrameLayout) inflater.inflate (R.layout.empty_fragment, null);
         pagerAdapter.addView (v0, 0);
         pagerAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -132,7 +176,9 @@ public class SessionManager extends AppCompatActivity {
 
     public void addNewPage(MenuItem item){
         FrameLayout newPage = (FrameLayout) inflater.inflate (R.layout.empty_fragment, null);
-        pagerAdapter.addView (newPage, 1);
+        pagerAdapter.addView (newPage);
+        TextView currentTitle = (TextView) newPage.findViewById(R.id.pageTitle);
+        currentTitle.setText("Page " + pagerAdapter.getSize());
         pagerAdapter.notifyDataSetChanged();
     }
 
@@ -142,6 +188,8 @@ public class SessionManager extends AppCompatActivity {
         RawDataGenerator newGenerator = new RawDataGenerator(this, finalHandler.idToAll.get(id)[0]);
 
         newGenerator.adapterSetup(finalHandler.allSystems.get(id));
+        allAdapters.add(newGenerator.getAdapter());
+        allMaps.add(finalHandler.allSystems.get(id));
 
         currentLayout.addView(newGenerator.getView());
 
@@ -153,6 +201,7 @@ public class SessionManager extends AppCompatActivity {
         RawDataGenerator newGenerator = new RawDataGenerator(this, finalHandler.idToAll.get(id)[0]);
 
         newGenerator.adapterSetup(finalHandler.allSystems.get(id).subMap(startDate,endDate));
+        allAdapters.add(newGenerator.getAdapter());
 
         currentLayout.addView(newGenerator.getView());
 
@@ -176,22 +225,49 @@ public class SessionManager extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void addBarChartView(String id){
+    public void updateBarChartData() {
+
+        int i = 0;
+
+        for (BarChartGenerator each : allBars){
+            //int i = 0;
+
+            if(each.getAddingUpdate()) {
+                for (Map.Entry<String, String> entry : finalHandler.allSystems.get(each.getId()).entrySet()) {
+                    i++;
+                    each.addDataToExisting(i, Float.parseFloat(entry.getValue()), entry.getKey());
+                }
+                each.addDataToExistingFinish();
+            }else if(each.getReplacingUpdate()){
+                each.setupYaxis();
+                for (Map.Entry<String, String> entry : finalHandler.allSystems.get(each.getId()).entrySet()) {
+                    i = each.getSize();
+                    each.insertYaxis(i, Float.parseFloat(entry.getValue()));
+                }
+                each.addDataSet(finalHandler.idToAll.get(each.getId())[0]);
+            }
+        }
+
+    }
+
+    public void addBarChartView(String id, boolean addingUpdate, boolean replacingUpdate){
         FrameLayout currentLayout = (FrameLayout) getCurrentPage();
 
-        BarChartGenerator newBar = new BarChartGenerator(this);
+        BarChartGenerator newBar = new BarChartGenerator(this, id, addingUpdate, replacingUpdate);
         newBar.barChartSetup();
         int i = 0;
         for(Map.Entry<String, String> entry : finalHandler.allSystems.get(id).entrySet()){
-
-            newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            //newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            newBar.insertYaxisTest(i, Float.parseFloat(entry.getValue()), entry.getKey() );
             i++;
         }
 
-        newBar.setYaxis("Values");
+        newBar.setYaxisTest(finalHandler.idToAll.get(id)[0]);
         newBar.setBarData();
         newBar.finalSetup();
         currentLayout.addView(newBar.getView());
+
+        allBars.add(newBar);
     }
 
     public void addBarChartView(String id, String startDate, String endDate){
@@ -199,19 +275,22 @@ public class SessionManager extends AppCompatActivity {
 
         SortedMap<String, String> dataMap = finalHandler.allSystems.get(id).subMap(startDate, endDate);
 
-        BarChartGenerator newBar = new BarChartGenerator(this);
+        BarChartGenerator newBar = new BarChartGenerator(this, id, false, false);
         newBar.barChartSetup();
         int i = 0;
         for(Map.Entry<String, String> entry : dataMap.entrySet()){
 
-            newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            //newBar.insertYaxis(i, Float.parseFloat(entry.getValue()) );
+            newBar.insertYaxisTest(i, Float.parseFloat(entry.getValue()), entry.getKey() );
             i++;
         }
 
-        newBar.setYaxis("Values");
+        newBar.setYaxisTest(finalHandler.idToAll.get(id)[0]);
         newBar.setBarData();
         newBar.finalSetup();
         currentLayout.addView(newBar.getView());
+
+        allBars.add(newBar);
     }
 
     public void addLineChartView(String[] idList){
@@ -280,12 +359,14 @@ public class SessionManager extends AppCompatActivity {
         newLayout.setOrientation(LinearLayout.VERTICAL);
         newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        final EditText xaxis = new EditText(this);
-        xaxis.setHint("X-Axis for Chart");
+        final AutoCompleteTextView xaxis = new AutoCompleteTextView(this);
+        xaxis.setHint("Which Value to show");
+        xaxis.setAdapter(new ArrayAdapter<String>(this, R.layout.my_array_adapter_item, android.R.id.text1, finalHandler.IDs));
         newLayout.addView(xaxis);
 
         final Spinner spinner = new Spinner(this);
-        spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        //spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        spinner.setAdapter(new ArrayAdapter<String>(this, R.layout.my_array_adapter_item, android.R.id.text1, finalHandler.tags));
         newLayout.addView(spinner);
 
         final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
@@ -294,19 +375,112 @@ public class SessionManager extends AppCompatActivity {
         final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
+        startGenerator.setNextDownFocusID(endGenerator.getFocusID());
+
+        final CheckBox addingCheck = new CheckBox(this);
+        addingCheck.setHint("Update by adding on top of existing data");
+        newLayout.addView(addingCheck);
+
+        final CheckBox replacingCheck = new CheckBox(this);
+        replacingCheck.setHint("Update by replacing the existing data");
+        newLayout.addView(replacingCheck);
+
+        replacingCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(replacingCheck.isChecked())
+                    addingCheck.setChecked(false);
+            }
+        });
+        addingCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(addingCheck.isChecked())
+                    replacingCheck.setChecked(false);
+            }
+        });
+
+        xaxis.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    try {
+                        if (startGenerator.isNull() || endGenerator.isNull()) {
+                            if (TextUtils.isEmpty(xaxis.getText())) {
+                                addBarChartView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), addingCheck.isChecked(), replacingCheck.isChecked());
+                            } else {
+                                addBarChartView(xaxis.getText().toString().toUpperCase(), addingCheck.isChecked(), replacingCheck.isChecked());
+                            }
+                        } else {
+                            if (TextUtils.isEmpty(xaxis.getText())) {
+
+                                String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                                updateDataWithWait(tempUrl);
+
+                                addBarChartView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), startGenerator.getDate(), endGenerator.getDate());
+                            } else if (finalHandler.idToAll.containsKey(xaxis.getText().toString().toUpperCase())) {
+
+                                String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                                updateDataWithWait(tempUrl);
+
+                                addBarChartView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                            }
+                        }
+
+                        TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                        titleHelp.setVisibility(View.GONE);
+                        alert.dismiss();
+                    }catch (Exception e){
+                        Toast.makeText(context, "ID entered is not available", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
         Button finished = new Button(this);
         finished.setHint("Create The Chart");
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(startGenerator.isNull() || endGenerator.isNull()){
-                    addBarChartView(xaxis.getText().toString().toUpperCase());
-                }else{
-                    addBarChartView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+//                if(startGenerator.isNull() || endGenerator.isNull()){
+//                    addBarChartView(xaxis.getText().toString().toUpperCase(), addingCheck.isChecked(), replacingCheck.isChecked());
+//                }else{
+//                    addBarChartView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate(), false, false);
+//                }
+
+                try {
+                    if (startGenerator.isNull() || endGenerator.isNull()) {
+                        if (TextUtils.isEmpty(xaxis.getText())) {
+                            addBarChartView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), addingCheck.isChecked(), replacingCheck.isChecked());
+                        } else {
+                            addBarChartView(xaxis.getText().toString().toUpperCase(), addingCheck.isChecked(), replacingCheck.isChecked());
+                        }
+                    } else {
+                        if (TextUtils.isEmpty(xaxis.getText())) {
+
+                            String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                            updateDataWithWait(tempUrl);
+
+                            addBarChartView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), startGenerator.getDate(), endGenerator.getDate());
+                        } else if (finalHandler.idToAll.containsKey(xaxis.getText().toString().toUpperCase())) {
+
+                            String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                            updateDataWithWait(tempUrl);
+
+                            addBarChartView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                        }
+                    }
+
+                    TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                    titleHelp.setVisibility(View.GONE);
+                    alert.dismiss();
+                }catch (Exception e){
+                    Toast.makeText(context, "ID entered is not available", Toast.LENGTH_SHORT).show();
                 }
 
-                alert.dismiss();
             }
         });
         newLayout.addView(finished);
@@ -330,7 +504,7 @@ public class SessionManager extends AppCompatActivity {
 
         final EditTextNumeric numberOfLines = new EditTextNumeric(this);
         numberOfLines.setMaxLength(1);
-        numberOfLines.setMinValue(0);
+        numberOfLines.setMinValue(1);
         numberOfLines.setHint("How many different sensors?");
         newLayout.addView(numberOfLines);
 
@@ -340,18 +514,55 @@ public class SessionManager extends AppCompatActivity {
         final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
+        startGenerator.setNextDownFocusID(endGenerator.getFocusID());
+
+        numberOfLines.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    if(!TextUtils.isEmpty(numberOfLines.getText())) {
+                        if (startGenerator.isNull() || endGenerator.isNull()) {
+                            addLineChartDataSets(numberOfLines.getValue(), null, null, null, null);
+                        } else {
+                            addLineChartDataSets(
+                                    numberOfLines.getValue(),
+                                    startGenerator.getDate(),
+                                    endGenerator.getDate(),
+                                    startGenerator.getDateHttp(),
+                                    endGenerator.getDateHttp()
+                            );
+                        }
+                        alert.dismiss();
+                    }else{
+                        Toast.makeText(context, "Please enter a number", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
         Button finished = new Button(this);
         finished.setHint("Select the Data");
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(startGenerator.isNull() || endGenerator.isNull()){
-                    addLineChartDataSets(numberOfLines.getValue(), null, null);
+                if(!TextUtils.isEmpty(numberOfLines.getText())) {
+                    if (startGenerator.isNull() || endGenerator.isNull()) {
+                        addLineChartDataSets(numberOfLines.getValue(), null, null, null, null);
+                    } else {
+                        addLineChartDataSets(
+                                numberOfLines.getValue(),
+                                startGenerator.getDate(),
+                                endGenerator.getDate(),
+                                startGenerator.getDateHttp(),
+                                endGenerator.getDateHttp()
+                        );                    }
+                    //addLineChartDataSets(numberOfLines.getValue());
+                    alert.dismiss();
                 }else{
-                    addLineChartDataSets(numberOfLines.getValue(), startGenerator.getDate(), endGenerator.getDate());
+                    Toast.makeText(context, "Please enter a number", Toast.LENGTH_SHORT).show();
                 }
-                //addLineChartDataSets(numberOfLines.getValue());
-                alert.dismiss();
             }
         });
         newLayout.addView(finished);
@@ -361,7 +572,7 @@ public class SessionManager extends AppCompatActivity {
         alert.show();
     }
 
-    public void addLineChartDataSets(final int numberOfLines, final String startDate, final String endDate){
+    public void addLineChartDataSets(final int numberOfLines, final String startDate, final String endDate, final String startDateHttp, final String endDateHttp){
         final AlertDialog alert = new AlertDialog.Builder(this).create();
 
         alert.setTitle("Line Chart Parameters");
@@ -369,22 +580,105 @@ public class SessionManager extends AppCompatActivity {
 
         ScrollView scrollView = new ScrollView(this);
 
-        LinearLayout newLayout = new LinearLayout(this);
+        final LinearLayout newLayout = new LinearLayout(this);
         newLayout.setOrientation(LinearLayout.VERTICAL);
         newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final TextView spinnerTitle = new TextView(this);
+        spinnerTitle.setText("Available Systems Drop-Down List");
+        newLayout.addView(spinnerTitle);
 
         final Spinner spinner = new Spinner(this);
         spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
         newLayout.addView(spinner);
 
+        final CheckBox addingCheck = new CheckBox(this);
+        addingCheck.setHint("Update by adding on top of existing data");
+        newLayout.addView(addingCheck);
+
+        final CheckBox replacingCheck = new CheckBox(this);
+        replacingCheck.setHint("Update by replacing the existing data");
+        newLayout.addView(replacingCheck);
+
+        replacingCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(replacingCheck.isChecked())
+                    addingCheck.setChecked(false);
+            }
+        });
+        addingCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(addingCheck.isChecked())
+                    replacingCheck.setChecked(false);
+            }
+        });
+
         final EditText[] lines = new EditText[numberOfLines];
 
         for(int i = 0; i < numberOfLines; i++) {
-            final EditText newLine = new EditText(this);
-            newLine.setHint("Which Value to show:" + (i + 1));
+//            final EditText newLine = new EditText(this);
+//            newLine.setHint("Which Value to show:" + (i + 1));
+//            lines[i] = newLine;
+//            newLayout.addView(newLine);
+            final AutoCompleteTextView newLine = new AutoCompleteTextView(this);
+            newLine.setHint("Which Value to show" + (i+1));
+            newLine.setAdapter(new ArrayAdapter<String>(this, R.layout.my_array_adapter_item, android.R.id.text1, finalHandler.IDs));
             lines[i] = newLine;
+//            newLine.setId(i);
+//            newLine.setNextFocusDownId();
+
+            if(i < numberOfLines - 1) {
+                final int finalI = i;
+                newLine.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                            //newLine.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.));
+                            lines[finalI +1].requestFocus();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }else{
+                newLine.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                            String[] lineIDs = new String[numberOfLines];
+                            try {
+                                for (int i = 0; i < Array.getLength(lines); i++) {
+                                    lineIDs[i] = lines[i].getText().toString().toUpperCase();
+                                }
+
+                                if (startDate == null || endDate == null) {
+                                    addLineChartView(lineIDs);
+                                } else {
+
+                                    String tempUrl = createURL(startDateHttp, endDateHttp);
+                                    updateDataWithWait(tempUrl);
+
+                                    addLineChartView(lineIDs, startDate, endDate);
+                                }
+
+                                TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                                titleHelp.setVisibility(View.GONE);
+                                alert.dismiss();
+                            }catch (Exception e){
+                                Toast.makeText(context, "One or more of ID(s) are not available", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+
             newLayout.addView(newLine);
         }
+
 
         Button finished = new Button(this);
         finished.setHint("Create The Chart");
@@ -392,18 +686,27 @@ public class SessionManager extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String[] lineIDs = new String[numberOfLines];
+                try {
+                    for (int i = 0; i < Array.getLength(lines); i++) {
+                        lineIDs[i] = lines[i].getText().toString().toUpperCase();
+                    }
 
-                for(int i = 0; i < Array.getLength(lines); i++){
-                    lineIDs[i] = lines[i].getText().toString().toUpperCase();
+                    if (startDate == null || endDate == null) {
+                        addLineChartView(lineIDs);
+                    } else {
+
+                        String tempUrl = createURL(startDateHttp, endDateHttp);
+                        updateDataWithWait(tempUrl);
+
+                        addLineChartView(lineIDs, startDate, endDate);
+                    }
+
+                    TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                    titleHelp.setVisibility(View.GONE);
+                    alert.dismiss();
+                }catch (Exception e){
+                    Toast.makeText(context, "One or more of ID(s) are not available", Toast.LENGTH_SHORT).show();
                 }
-
-                if(startDate == null || endDate == null) {
-                    addLineChartView(lineIDs);
-                }else{
-                    addLineChartView(lineIDs, startDate, endDate);
-                }
-
-                alert.dismiss();
             }
         });
         newLayout.addView(finished);
@@ -417,7 +720,7 @@ public class SessionManager extends AppCompatActivity {
         final AlertDialog alert = new AlertDialog.Builder(this).create();
 
         alert.setTitle("Raw Data Parameters");
-        alert.setMessage("Please set the parameters");
+        alert.setMessage("Please either type the id of the sensor or choose the tag name from the drop-down menu");
 
         ScrollView scrollView = new ScrollView(this);
 
@@ -425,12 +728,15 @@ public class SessionManager extends AppCompatActivity {
         newLayout.setOrientation(LinearLayout.VERTICAL);
         newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        final EditText xaxis = new EditText(this);
+        final AutoCompleteTextView xaxis = new AutoCompleteTextView(this);
         xaxis.setHint("Which Value to show");
+        xaxis.setAdapter(new ArrayAdapter<String>(this, R.layout.my_array_adapter_item, android.R.id.text1, finalHandler.IDs));
+        //xaxis.onKeyDown(KeyEvent.KEYCODE_ENTER, event)
         newLayout.addView(xaxis);
 
         final Spinner spinner = new Spinner(this);
-        spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        //spinner.setAdapter(new HashMapAdapter(this, finalHandler.tagToId));
+        spinner.setAdapter(new ArrayAdapter<String>(this, R.layout.my_array_adapter_item, android.R.id.text1, finalHandler.tags));
         newLayout.addView(spinner);
 
         final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
@@ -439,17 +745,74 @@ public class SessionManager extends AppCompatActivity {
         final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
         newLayout.addView(endGenerator.getPicker());
 
+        startGenerator.setNextDownFocusID(endGenerator.getFocusID());
+
+        xaxis.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    try {
+                        if (startGenerator.isNull() || endGenerator.isNull()) {
+                            if (TextUtils.isEmpty(xaxis.getText())) {
+                                addRawDataView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()));
+                            } else {
+                                addRawDataView(xaxis.getText().toString().toUpperCase());
+                            }
+                        } else {
+
+                            String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                            updateDataWithWait(tempUrl);
+
+                            if (TextUtils.isEmpty(xaxis.getText())) {
+                                addRawDataView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), startGenerator.getDate(), endGenerator.getDate());
+                            } else {
+                                addRawDataView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                            }
+                        }
+
+                        TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                        titleHelp.setVisibility(View.GONE);
+                        alert.dismiss();
+                    }catch (Exception e){
+                        Toast.makeText(context, "ID entered is not available", Toast.LENGTH_SHORT).show();
+                        //xaxis.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
         Button finished = new Button(this);
         finished.setHint("Create The Data View");
         finished.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(startGenerator.isNull() || endGenerator.isNull()){
-                    addRawDataView(xaxis.getText().toString().toUpperCase());
-                }else{
-                    addRawDataView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                try {
+                    if (startGenerator.isNull() || endGenerator.isNull()) {
+                        if (TextUtils.isEmpty(xaxis.getText())) {
+                            addRawDataView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()));
+                        } else {
+                            addRawDataView(xaxis.getText().toString().toUpperCase());
+                        }
+                    } else {
+
+                        String tempUrl = createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp());
+                        updateDataWithWait(tempUrl);
+
+                        if (TextUtils.isEmpty(xaxis.getText())) {
+                            addRawDataView(finalHandler.tagToId.get(spinner.getSelectedItem().toString()), startGenerator.getDate(), endGenerator.getDate());
+                        } else {
+                            addRawDataView(xaxis.getText().toString().toUpperCase(), startGenerator.getDate(), endGenerator.getDate());
+                        }
+                    }
+
+                    TextView titleHelp = (TextView) getCurrentPage().findViewById(R.id.helpTitle);
+                    titleHelp.setVisibility(View.GONE);
+                    alert.dismiss();
+                }catch (Exception e){
+                    Toast.makeText(context, "ID entered is not available", Toast.LENGTH_SHORT).show();
                 }
-                alert.dismiss();
             }
         });
         newLayout.addView(finished);
@@ -514,8 +877,8 @@ public class SessionManager extends AppCompatActivity {
 
         //AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle("ID");
-        alert.setMessage("Please set new ID");
+        alert.setTitle("Add View");
+        alert.setMessage("Please choose a new display type to add");
         alert.setView(newLayout);
 
         alert.show();
@@ -527,19 +890,20 @@ public class SessionManager extends AppCompatActivity {
             case R.id.action_TestFragment:
                 addFragmentOptions();
                 return true;
-            case R.id.action_UpdateData:
-                updateData();
-                return true;
             case R.id.action_UpdateURLandID:
-                updateURL();
+                updateDataDialog();
+                return true;
+            case R.id.action_StopUpdate:
+                stopUpdating();
                 return true;
             case R.id.action_addView:
+                    //addView();
+                if(!finalHandler.allSystems.isEmpty()) {
                     addView();
-//                if(!finalHandler.allSystems.isEmpty()) {
-//                    addView();
-//                }else{
-//                    Toast.makeText(this, "Please update the data first", Toast.LENGTH_SHORT).show();
-//                }
+                }else {
+                    Toast.makeText(this, "Please update the data first", Toast.LENGTH_SHORT).show();
+                    //addView();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -579,18 +943,201 @@ public class SessionManager extends AppCompatActivity {
     }
 
     //DATABASE STUFF
-    public void updateData() {
+    public void updateDataConstantly() {
 
-        finalJson = new JsonHandler(finalHandler, dataUrl, this);
         Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
 
-        //pullingDataAlert();
+        keepUpdating(dataUrlRecent);
+//        finalJson = new JsonHandler(finalHandler, dataUrl, this);
+//        finalJson.execute();
+
+        handler.postDelayed(runnable, delay);
     }
 
-    public void updateData(String startDate, String endDate) {
+    public void updateDataWithWait(){
+        Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
 
         finalJson = new JsonHandler(finalHandler, dataUrl, this);
+
+        try {
+            finalJson.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e("Error Session Manager", e.getMessage());
+        }
+    }
+
+    //CONSTANT HANDLER IDEA
+    // TODO INVESTIGATE THE IDEA OF HAVING A SECOND HANDLER THAT CAN PASS DATA TO FIRST AND VIEWS, INSTEAD OF UPDATING
+    public void keepUpdating(String dataUrlRecent){
+        finalJson = new JsonHandler(finalHandler, dataUrlRecent, this, false, true);
+        finalJson.execute();
+    }
+
+    public void stopUpdating(){
+        handler.removeCallbacks(runnable);
+    }
+
+    public void updateData(String dataUrl) {
+
+        finalJson = new JsonHandler(finalHandler, dataUrl, this, true);
+        finalJson.execute();
+
         Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void updateDataWithWait(String dataUrl){
+        Toast.makeText(context, "Please wait, pulling data from: " + dataUrl, Toast.LENGTH_SHORT).show();
+
+        finalJson = new JsonHandler(finalHandler, dataUrl, context, false, true);
+        //finalJson.execute();
+
+        try {
+            finalJson.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e("Error Session Manager", e.getMessage());
+        }
+    }
+
+    public void updateDataDialog(){
+        final AlertDialog alert = new AlertDialog.Builder(this).create();
+
+        alert.setTitle("Update Data");
+        alert.setMessage("Please set up data update settings");
+
+        ScrollView scrollView = new ScrollView(this);
+
+        LinearLayout newLayout = new LinearLayout(this);
+        newLayout.setOrientation(LinearLayout.VERTICAL);
+        newLayout.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        final EditText dataUrlText = new EditText(this);
+        dataUrlText.setHint("Please enter URL");
+        newLayout.addView(dataUrlText);
+
+        final EditTextNumeric delayInput = new EditTextNumeric(this);
+        delayInput.setMaxLength(4);
+        delayInput.setMinValue(5);
+        delayInput.setVisibility(View.GONE);
+        delayInput.setHint("How often(seconds)?");
+
+        final CheckBox addRecent = new CheckBox(this);
+        addRecent.setHint("Constant Update");
+        newLayout.addView(addRecent);
+        newLayout.addView(delayInput);
+
+        final DateAndTimeViewGenerator startGenerator = new DateAndTimeViewGenerator(this, "Start Date");
+        newLayout.addView(startGenerator.getPicker());
+
+        final DateAndTimeViewGenerator endGenerator = new DateAndTimeViewGenerator(this, "End Date");
+        newLayout.addView(endGenerator.getPicker());
+
+        startGenerator.setNextDownFocusID(endGenerator.getFocusID());
+
+        dataUrlText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    if(addRecent.isChecked() && event.getAction() == KeyEvent.ACTION_DOWN){
+                        delayInput.requestFocus();
+                    }else{
+                        dataUrl = parseDataUrl(dataUrlText.getText().toString());
+                        dataUrlRecent = dataUrl + "/recent";
+
+                        if(startGenerator.isNull() || endGenerator.isNull()){
+                            updateData(dataUrlRecent);
+                        }else{
+                            updateData(createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp()));
+                        }
+
+                        //addLineChartDataSets(numberOfLines.getValue());
+                        alert.dismiss();
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        final Button constantly = new Button(this);
+        constantly.setHint("Update Data Constantly");
+        constantly.setVisibility(View.GONE);
+        constantly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dataUrl = parseDataUrl(dataUrlText.getText().toString());
+                dataUrlRecent = dataUrl + "/recent";
+                delay = delayInput.getValue() * 1000;
+
+                updateDataConstantly();
+
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(constantly);
+
+        final Button once = new Button(this);
+        once.setHint("Update Data Once (default is /recent)");
+        once.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dataUrl = parseDataUrl(dataUrlText.getText().toString());
+                dataUrlRecent = dataUrl + "/recent";
+
+                if(startGenerator.isNull() || endGenerator.isNull()){
+                    updateData(dataUrlRecent);
+                }else{
+                    updateData(createURL(startGenerator.getDateHttp(), endGenerator.getDateHttp()));
+                }
+
+                //addLineChartDataSets(numberOfLines.getValue());
+                alert.dismiss();
+            }
+        });
+        newLayout.addView(once);
+
+        addRecent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(addRecent.isChecked()){
+                    delayInput.setVisibility(View.VISIBLE);
+                    constantly.setVisibility(View.VISIBLE);
+
+                    once.setVisibility(View.GONE);
+                    startGenerator.setVisibility(View.GONE);
+                    endGenerator.setVisibility(View.GONE);
+                }else{
+                    delayInput.setVisibility(View.GONE);
+                    constantly.setVisibility(View.GONE);
+
+                    once.setVisibility(View.VISIBLE);
+                    startGenerator.setVisibility(View.VISIBLE);
+                    endGenerator.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        scrollView.addView(newLayout);
+        alert.setView(scrollView);
+        alert.show();
+    }
+
+    //date time update to current type
+    public String createURL(String startDateHttp, String endDateHttp){
+
+        //dataUrl?startDate=2017-04-11%2022&3A40%3A00&endDate=2017-04-11%2023%3A00%3A00
+        return dataUrl + "?startDate=" + startDateHttp + "&endDate=" + endDateHttp;
+    }
+
+    public void createURL(String id, String startDateHttp, String endDateHttp){
+
+    }
+
+    public void createURL(String id, String system, String startDateHttp, String endDateHttp){
 
     }
 
@@ -638,6 +1185,7 @@ public class SessionManager extends AppCompatActivity {
                     dataUrl = "http://" + textFields[0].getText().toString() + ":3000/dbquery/recent";
                 }else{
                     dataUrl = "http://" + textFields[0].getText().toString() + ":3000/dbquery";
+                    dataUrlRecent = dataUrl + "/recent";
                 }
             }
         });
@@ -650,5 +1198,10 @@ public class SessionManager extends AppCompatActivity {
 
         alert.show();
     }
+
+    public String parseDataUrl(String url){
+        return "http://" + url + ":3000/dbquery";
+    }
+
 
 }

@@ -25,6 +25,8 @@ public class ViewGenerator {
     Context context;
     DisplayMetrics metrics;
 
+    String id;
+
     int heightDP;
     int widthDP;
     int viewHeightDP;
@@ -74,6 +76,10 @@ public class ViewGenerator {
 
     public View getView(){
         return topLayout;
+    }
+
+    public String getId(){
+        return id;
     }
 
 }

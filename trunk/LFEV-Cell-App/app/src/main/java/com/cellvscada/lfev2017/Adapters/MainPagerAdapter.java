@@ -42,6 +42,11 @@ public class MainPagerAdapter extends PagerAdapter
         return v;
     }
 
+    //Returns the total amount of items
+    public int getSize(){
+        return views.size();
+    }
+
     //-----------------------------------------------------------------------------
     // Used by ViewPager.  Called when ViewPager no longer needs a page to display; it
     // is our job to remove the page from the container, which is normally the
@@ -87,6 +92,7 @@ public class MainPagerAdapter extends PagerAdapter
     public int addView (View v, int position)
     {
         views.add (position, v);
+
         return position;
     }
 

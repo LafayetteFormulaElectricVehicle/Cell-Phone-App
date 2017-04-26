@@ -19,14 +19,14 @@
         />
 
 
-    <item android:id="@+id/action_UpdateData"
-        android:title="Update Data"
+    <item android:id="@+id/action_StopUpdate"
+        android:title="Stop Updating"
         android:orderInCategory="100"
         app:showAsAction="never"
         />
 
     <item android:id="@+id/action_UpdateURLandID"
-        android:title="Update URL"
+        android:title="Update Data"
         android:orderInCategory="100"
         app:showAsAction="never"
         />
